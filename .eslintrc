@@ -1,0 +1,30 @@
+{
+  "parser": "babel-eslint",
+  "plugins": [
+    "meteor"
+  ],
+  "extends": [
+    "airbnb",
+    "plugin:meteor/recommended"
+  ],
+  "rules": {
+    "no-underscore-dangle": [2, { "allow": ["_id", "_d", "_ensureIndex", "_localStorage"] }]
+  },
+  "settings": {
+    "import/resolver": "meteor"
+  },
+  "globals": {
+    "Package": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    },
+    "syntax_map": {
+      "JavaScript (Babel)": "javascript",
+    }
+  }
+}

@@ -1,0 +1,37 @@
+.drizzle-table {
+  width: 100%;
+  font-weight: 200;
+  font-size: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 3px 1px 0px rgba(0, 0, 0, 0.1);
+
+  td {
+    padding: 10px 7px;
+  }
+
+  thead {
+    tr {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      td {
+        text-align: center;
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        font-size: 12px;
+        div, span {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr:nth-child(odd) {
+      background-color: rgba(16, 136, 204, 0.09);
+    }
+    tr {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      td {
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+}

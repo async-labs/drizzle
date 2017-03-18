@@ -1,0 +1,64 @@
+.zenmarket--tabs {
+  .zenmarket--tab-list {
+    list-style: none !important;
+    padding: 0;
+    margin: 10px !important;
+
+    ul {
+      list-style: none !important;
+      list-style-type: none !important;
+    }
+
+    li {
+      float: left;
+      padding: 5px;
+      background-color: white !important;
+      color: #0088D3 !important;
+      margin: 4px !important;
+      border: 1px solid #0088D3 !important;
+      list-style: none !important;
+    }
+
+    li>a:active, li>a:focus {
+      background-color: trasparent !important;
+    }
+
+    li.zenmarket--tabs-active {
+      background-color: #0088D3 !important;
+      color: white !important;
+    }
+  }
+
+  ul.zenmarket--tab-panels  {
+    list-style: none !important;
+    list-style-type: none !important;
+    margin: 4px !important;
+
+    li, ul li {
+      list-style: none !important;
+      list-style-type: none !important;
+      margin: 5px !important;
+    }
+  }
+
+  .zenmarket--tab-panels {
+    list-style: none !important;
+    padding: 0px;
+
+    ul, li, ul li {
+      list-style: none !important;
+      list-style-type: none !important;
+      margin: 5px !important;
+    }
+  }
+
+  h4 {
+    background-color: transparent !important;
+    padding: 10px 0px 5px 0px !important;
+    margin: 0px !important;
+  }
+
+  .zenmarket--tab-panels ol {
+    padding: 0px;
+  }
+}

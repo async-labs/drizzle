@@ -1,0 +1,11 @@
+.drizzle-product-banner {
+  display: block;
+  height: 120px;
+  text-align: center;
+}
+
+@media only screen and (max-width: 360px){
+  .drizzle-product-banner {
+    display: none;
+  }
+}

@@ -1,0 +1,62 @@
+# Meteor packages used by this project, one per line.
+# Check this file (and the other files in this directory) into your repository.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+meteor-base@1.0.4             # Packages every Meteor app needs to have
+mobile-experience@1.0.4       # Packages for a great mobile UX
+mongo@1.1.16                   # The database Meteor supports right now
+session@1.1.7                 # Client-side reactive dictionary for your app
+tracker@1.1.2                 # Meteor's client-side reactive programming library
+standard-minifier-css@1.3.4   # CSS minifier run for production mode
+es5-shim@4.6.15                # ECMAScript 5 compatibility for older browsers.
+ecmascript@0.6.3              # Enable ECMAScript2015+ syntax in app code
+
+accounts-password@1.3.4
+audit-argument-checks@1.0.7
+email@1.1.18
+static-html@1.1.12_1
+check@1.2.5
+random@1.0.10
+service-configuration@1.0.11
+reactive-var@1.0.11
+http@1.2.12
+oauth@1.1.13
+
+kadira:flow-router
+twbs:bootstrap
+fortawesome:fontawesome
+chrismbeckett:toastr
+edgee:slingshot
+momentjs:moment
+ongoworks:speakingurl
+meteorhacks:picker
+meteorhacks:kadira
+jquery@1.11.10
+reywood:publish-composite
+dburles:collection-helpers
+mdg:validated-method
+force-ssl@1.0.13
+aldeed:simple-schema
+aldeed:collection2
+shell-server@0.2.3
+alanning:roles
+meteorhacks:cluster
+tmeasday:publish-counts
+peerlibrary:aws-sdk
+percolate:synced-cron
+fourseven:scss
+
+# ---------------------
+#   Drizzle Packages
+# ---------------------
+drizzle:models
+drizzle:integrations
+drizzle:s3
+drizzle:util
+drizzle:user-functions
+drizzle:check-functions
+drizzle:stripe
+drizzle:charge-functions
+percolate:migrations

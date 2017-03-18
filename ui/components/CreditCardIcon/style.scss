@@ -1,0 +1,28 @@
+@keyframes cardIconFadeIn {
+  0% { opacity: 0 }
+  100% { opacity: 1 }
+}
+
+@mixin card-dimensions($width, $height, $position-x) {
+  width: $width;
+  height: $height;
+  background-position-x: $position-x;
+  animation-name: cardIconFadeIn;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+}
+
+.drizzle-credit-card-icon {
+  content: ' ';
+
+  position: absolute;
+  background: url(./credit-card-icons.png) no-repeat;
+
+  &.visa { @include card-dimensions(46px, 33px, 0px); }
+  &.mastercard { @include card-dimensions(46px, 33px, -50px); }
+  &.discover { @include card-dimensions(46px, 33px, -100px); }
+  &.amex { @include card-dimensions(48px, 33px, -150px); }
+  &.jcb { @include card-dimensions(47px, 33px, -201px); }
+  &.dinersclub { @include card-dimensions(47px, 33px, -252px); }
+  &.cvc { @include card-dimensions(48px, 31px, -360px); }
+}

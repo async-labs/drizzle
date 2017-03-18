@@ -1,0 +1,17 @@
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #777;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color: #777;
+   opacity: 1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color: #777;
+   opacity: 1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color: #777;
+}
+:placeholder-shown { /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
+  color: #777;
+}

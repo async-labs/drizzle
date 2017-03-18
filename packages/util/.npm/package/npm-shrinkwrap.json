@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "punycode": {
+      "version": "1.3.2",
+      "resolved": "https://registry.npmjs.org/punycode/-/punycode-1.3.2.tgz",
+      "from": "punycode@1.3.2"
+    },
+    "querystring": {
+      "version": "0.2.0",
+      "resolved": "https://registry.npmjs.org/querystring/-/querystring-0.2.0.tgz",
+      "from": "querystring@0.2.0"
+    },
+    "url": {
+      "version": "0.10.3",
+      "resolved": "https://registry.npmjs.org/url/-/url-0.10.3.tgz",
+      "from": "url@0.10.3"
+    }
+  }
+}

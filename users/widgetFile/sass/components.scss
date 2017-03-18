@@ -1,0 +1,80 @@
+@import "../node_modules/@drizzle/components/components/Button/style.scss";
+@import "../node_modules/@drizzle/components/components/Input/style.scss";
+@import "../node_modules/@drizzle/components/components/FormFooterLinks/style.scss";
+@import "../node_modules/@drizzle/components/components/WidgetFooterBar/style.scss";
+
+@keyframes loginButtonsFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  99% { opacity: 0 }
+  100% { display: none }
+}
+
+.drizzle-fade-in {
+  opacity: 0;
+  display: block !important;
+  animation: loginButtonsFadeIn .2s ease-in 1 forwards;
+}
+
+.drizzle-fade-out {
+  opacity: 1;
+  animation: fadeOut .2s ease-in 1 forwards;
+}
+
+.footer-fade-in {
+  opacity: 0;
+  display: flex !important;
+  animation: loginButtonsFadeIn .2s ease-in 1 forwards;
+}
+
+.footer-fade-out {
+  opacity: 1;
+  display: none;
+  animation: fadeOut .2s ease-in 1 forwards;
+}
+
+.widget-fade-in {
+  opacity: 0;
+  display: block !important;
+  animation: loginButtonsFadeIn .2s ease-in 1 forwards;
+}
+
+.widget-fade-out {
+  opacity: 1;
+  animation: fadeOut .2s ease-in 1 forwards;
+}
+
+#drizzle--paywall-login-buttons {
+  opacity: 0;
+  animation: loginButtonsFadeIn .5s ease-in 1 forwards;
+}
+
+form .separator {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin: 15px auto !important;
+  font-size: 1.2em;
+}
+form .separator:before, .separator:after {
+  display: block;
+  content: " ";
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+  position: absolute;
+  top: 48%;
+}
+
+form .separator:before {
+  left: -60%;
+}
+
+form .separator:after {
+  right: -60%;
+}

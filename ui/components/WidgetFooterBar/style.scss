@@ -1,0 +1,64 @@
+.drizzle-footer-bar {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 70px !important;
+  background-color: #0095e8 !important;
+  border-top: rgba(0, 0, 0, 0.1) !important;
+  z-index: 5000;
+  .drizzle-container {
+    position: relative !important;
+    height: 60px !important;
+    width: 220px !important;
+    display: inherit !important;
+    img {
+      width: 40px !important;
+      height: 40px !important;
+      margin: 10px 20px !important;
+    }
+
+    button#drizzle-footer-button {
+      background-color: #4cad41 !important;
+      box-shadow: none !important;
+      margin: 8px 0px !important;
+    }
+
+    button#drizzle-footer-button:hover {
+      background-color: #4cad41 !important;
+      margin: 5px 0px !important;
+    }
+
+    @media only screen and (max-width: 690px) {
+      flex: 1 !important;
+      display: flex !important;
+      align-items: center !important;
+      width: 90% !important;
+      .drizzle-button {
+         width: 60% !important;
+         margin-right: 40px !important;
+      }
+    }
+  }
+  .call-to-action-text {
+    font-family: "Lato", "Helvetica Neue", Helvetica, sans-serif !important;
+    flex: 1 !important;
+    text-align: center !important;
+    font-size: 18px !important;
+    letter-spacing: 0.01em !important;
+    color: white !important;
+
+    @media only screen and (max-width: 690px) {
+      display: none !important;
+    }
+  }
+  .close-button {
+    position: absolute !important;
+    right: 15px !important;
+    top: 10px !important;
+    cursor: pointer !important;
+    color: white !important;
+  }
+}

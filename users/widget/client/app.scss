@@ -1,0 +1,26 @@
+@import 'stylesheet/main';
+@import 'style.import.scss';
+
+body {
+  margin: 0;
+  padding: 5px;
+}
+
+// ---------------------------
+// HOTFIX: Toggles padding
+// ---------------------------
+table.margin-auto {
+  margin: 0 auto;
+  td  {
+    padding: 0px 3px;
+  }
+}
+
+// ---------------------------
+// HOTFIX: Hide powered by Drizzle on mobile
+// ---------------------------
+@media only screen and (max-width: 360px){
+  .drizzle-powered {
+    display: none;
+  }
+}

@@ -1,0 +1,86 @@
+// @import url('https://fonts.googleapis.com/css?family=Lato:300, 400,700');
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(../fonts/Lato-Regular.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url(../fonts/Lato-Bold.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+body {
+  font-size: 16px;
+  font-family: "Lato", "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+
+  &:before, &:after {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+  }
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  height: 0;
+  box-sizing: content-box;
+}
+
+p {
+  margin: 0 0 10px;
+}
+
+textarea:focus {
+  border-color: none;
+  outline: 0 none;
+}
+
+/* custom helpers */
+.center { text-align: center; }
+.inline-b { display: inline-block; }
+.inline { display: inline; }
+.b { display: block; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+.va-bottom { vertical-align:bottom; }
+.margin-l-20 { margin-left: 20px; }
+.margin-l-12 { margin-left: 12px; }
+.margin-t-20 { margin-top: 20px; }
+.margin-t-10 { margin-top: 10px; }
+.margin-b-10 { margin-bottom: 10px; }
+.margin-l-4 { margin-left: 4px; }
+.margin-r-5 { margin-right: 5px; }
+.margin-r-10 { margin-right: 10px; }
+.margin-l-70 { margin-left: 70px; }
+.margin-l-22 { margin-left: 22px; }
+.margin-l-27per { margin-left: 27%; }
+.margin-l-32per { margin-left: 32%; }
+.margin-10 { margin: 10px; }
+.margin-5 { margin: 5px; }
+.margin-b-0 { margin: 0px; }
+.margin-15 { margin: 15px; }
+.margin-0 { margin: 0 !important; }
+.pad10 { padding: 0 10px; }
+.pad4 { padding: 4px; }
+.pad3 { padding: 3px; }
+.pad5 { padding: 5px; }
+.pad6 { padding: 6px; }
+.margin-t-b-5 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

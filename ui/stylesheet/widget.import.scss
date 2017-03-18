@@ -1,0 +1,87 @@
+ul.main-menu {
+  display: flex;
+  margin: 0 auto;
+  padding: 0;
+  flex-flow: row wrap;
+  max-width: 1400px;
+  justify-content: center;
+  li {
+    flex: 1;
+    list-style: none;
+    font-size: 32px;
+    position: relative;
+    text-align: center;
+    background-color: #f1f4f3;
+
+    a {
+      padding: 1px 6px 8px 6px;
+      padding-bottom: 8px;
+      position: relative;
+      color: #b4b4b4;
+      display: block;
+      transition: all 0.25s ease;
+
+      span {
+        display: block;
+        font-size: 13px;
+        text-decoration: none;
+      }
+
+      &:hover {
+        color: white;
+        background-color: #50b2f1;
+        text-decoration: none;
+      }
+    }
+
+    &:after {
+      position: absolute;
+      top: 20%;
+      right: 0;
+      width: 1px;
+      height: 60%;
+      background: rgba(0,0,0,0.07);
+      content: '';
+    }
+
+
+    &.active {
+      a {
+        // color: #50b2f1;
+        // background-color: white;
+        color: white;
+        background-color: #50b2f1;
+        &:after {
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          margin-left: -10px;
+          width: 0;
+          height: 0;
+          border: solid transparent;
+          border-width: 10px;
+          border-top-color: #50b2f1;
+          content: '';
+          pointer-events: none;
+        }
+      }
+    }
+
+  }
+}
+
+.panel {
+  border-radius: 0px;
+  border: none;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.2);
+  .panel-heading {
+    border-radius: 0px;
+  }
+}
+
+.panel.panel-default {
+  .panel-heading {
+    background-color: #50b2f1;
+    color: white;
+  }
+}

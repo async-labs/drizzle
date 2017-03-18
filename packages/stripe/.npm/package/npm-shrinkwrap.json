@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "bluebird": {
+      "version": "2.11.0",
+      "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.11.0.tgz",
+      "from": "bluebird@>=2.10.2 <3.0.0"
+    },
+    "lodash": {
+      "version": "4.17.2",
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.2.tgz",
+      "from": "lodash@>=4.11.1 <5.0.0"
+    },
+    "qs": {
+      "version": "2.4.2",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.2.tgz",
+      "from": "qs@>=2.4.2 <3.0.0"
+    },
+    "stripe": {
+      "version": "4.9.0",
+      "resolved": "https://registry.npmjs.org/stripe/-/stripe-4.9.0.tgz",
+      "from": "stripe@4.9.0"
+    }
+  }
+}

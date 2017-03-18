@@ -1,0 +1,23 @@
+.card {
+    padding: 5px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+@media screen
+ and (max-device-width: 359px)
+ and (min-device-width: 240px) {
+  .card {
+    padding: 1px!important;
+  }
+
+  .card ul {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .card .fs13{
+    margin-top: 0px;
+    margin-bottom: 5px;
+  }
+}

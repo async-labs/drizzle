@@ -1,0 +1,23 @@
+form .separator {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin: 15px auto !important;
+  font-size: 1.2em;
+}
+form .separator:before, .separator:after {
+  display: block;
+  content: " ";
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+  position: absolute;
+  top: 48%;
+}
+
+form .separator:before {
+  left: -60%;
+}
+
+form .separator:after {
+  right: -60%;
+}

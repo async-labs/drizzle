@@ -1,0 +1,24 @@
+.drizzle-input {
+  height: 34px !important;
+  line-height: 1.42857 !important;
+  color: #555555 !important;
+  background-color: #fff !important;
+  background-image: none !important;
+  font-size: 15px !important;
+  border: 1px rgba(51, 51, 51, 0.32) solid !important;
+  border-radius: 4px !important;
+  padding: 10px !important;
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.2) !important;
+  transition: border 0.15s ease-in-out , box-shadow 0.15s ease-in-out !important;
+  box-sizing: border-box !important;
+
+  &.full-width {
+    width: 100% !important;
+  }
+}
+
+.drizzle-input:focus {
+  outline: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.5) !important;
+  box-shadow: rgba(0, 0, 0, 0.0745098) 0px 0px 0px inset, rgba(2, 9, 14, 0.439216) 0px 0px 8px !important;
+}
