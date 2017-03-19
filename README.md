@@ -159,7 +159,7 @@ Navigate to http://localhost:8060, you should see:
 
 ![screen shot 2017-03-18 at 6 36 46 pm](https://cloud.githubusercontent.com/assets/10218864/24077420/ec05130c-0c09-11e7-83b1-c3fa9e082936.png)
 
-
+To see blue footer bar with call-to-action, go to http://localhost:8021/wall-settings and **Enable call to action footer bar**.
 
 # Deploy
 You will need to deploy 2 apps: Publishers app ( ./publishers) and Widget app (./users/widget). There is a detailed description for deployment of Meteor apps with mupx tool: https://github.com/tima101/meteor-deploy-letsencrypt
