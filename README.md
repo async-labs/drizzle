@@ -11,7 +11,7 @@ License: General Public License v3.0. We also offer a commercial license in case
 - any website owner who has premium, valuable, unique content and wants to sell it via membership and subscriptions.
 
 # Why this product exists:
-In short, this product exists because the majority of online publishers and content creators need an alternative revenue model as online ad revenue keeps declining. Many have great content that people are willing to pay for, but they don't have a simple way to put up a paywall or their current paywall is too diffcult to encourage users to pay. We've made this paywall easy to use on any website, and we've made the process of signing up and paying as seamless as possible.
+The majority of online publishers and content creators need an alternative revenue model as online advertising keeps declining. Many have great content that people are willing to pay for, but they don't have a simple way to put up a paywall or their current paywall is too diffcult to encourage users to pay. We've made this paywall easy to use on any type of website, and we've made the process of signing up and paying as seamless as possible.
 
 For more on ad revenue and why publishers must find alternative revenue sources, read:
 - Why Medium ditched ad-based business model and launches subscriptions: https://medium.com/@getdrizzle/subscriptions-on-medium-f23de6677464#.92s0vj4xa
