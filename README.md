@@ -59,14 +59,103 @@ https://medium.com/@getdrizzle/challenges-for-content-monetization-7a1b813ba19d#
 - Export users data
 
 # Setup of Publishers app (./publishers)
+In my local build, I use node v5.7.0 and npm 3.8.2 inside all apps.
+To set node version:
 
+```
+. ~/.nvm/nvm.sh
+nvm use 5.7.0
+```
 
+Publishers app is publisher's dashboard app, this is where publisher or website owner sets up subscription plan, monitors content performance and user payments. 
+
+In main folder, run:
+
+```
+npm install
+```
+
+In ./publishers folder, run:
+
+```
+meteor npm install
+meteor npm install --save bcrypt
+```
+
+Create local-settings.json file, example:
+
+```
+{
+    "AWSAccessKeyId": "AKIAIVxxxxxxxxxxxxxxxxxxxxxxx",
+    "AWSSecretAccessKey": "+BaPedgw1uyb0Exxxxxxxxxxxxxxxxxxxxxxx",
+    "S3bucket": "zenmarket",
+    "embedlyKey": "e40b9936xxxxxxxxxxxxxxxxxxxxxxx",
+    "private": {
+    },
+    "public": {
+    }
+}
+```
+Publishers app can be started locally by:
+
+```
+./start-local.sh
+```
+Publishers app is using remote demo MongoDB. Feel free to specify local or remote MONGO_URL in the start-local.sh file.
+Example of deployed Publishers app can be found here: https://app.getdrizzle.com/
+
+When you start app for the first time, DB will be seeded by a few documents: Admin user will be created (**users** collection), website (**products** collection) and paywalled page (**payg_content_walls** collection).
+
+App will be running at `http://localhost:8021/` To find email and password of your Admin user, go to:
+`./publishers/imports/startup/server/seeds.js`
+
+You will log in and revisit http://localhost:8021/setup page after we are done with setting up Users apps.
 
 # Setup of Users apps (./users/..)
 
+Remember set up right node version, or later on gulp won't run.
 
+In ./users folder, run:
+
+```
+./setup.sh
+```
+
+After it's done, make sure that ./users/widgetFile contains settings.json file:
+```
+{
+  "API_URL": "http://localhost:8051"
+}
+```
+
+In ./users/widget folder, create local-settings.json:
+```
+{
+  "PUBLISHER_ROOT_URL": "http://localhost:8021"
+}
+```
+And run:
+
+```
+meteor npm install --save bcrypt
+```
+
+To start 2 Users apps (Widget app at http://localhost:8051 and static Publisher app at http://localhost:8060), run 
+
+```
+./start-local.sh
+```
+inside ./users folder. This will also run gulpfile.js, so widget.js file at ./users/widgetFile/src/widget.js and ./publishers/private/widget.js is updated without app restart.
+
+Static Publisher app at http://localhost:8060 is a static website with paywalled content on the homepage.
 
 # Setup of paywall on local website (./users/publisher)
+
+Go to http://localhost:8021/login, log in with your Admin user. Go to http://localhost:8021/setup page. Copy setup code, and paste it at the bottom of ./users/publisher/index.html.
+
+Navigate to http://localhost:8060, you should see: 
+
+
 
 
 # Deploy
