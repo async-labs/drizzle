@@ -1,9 +1,9 @@
 # Drizzle paywall
-Drizzle paywall is a simple, scalable and user-friendly paywall, subscription and membership product for any publisher or online content creator. It's built using React, JS, Meteor, Node, MongoDB. It's compatible with any web technology and stack. It's implemented natively, not via external JS file. The paywall takes about 30 min to set up and deploy and only 5 min to install it on any type of website. If you are on Wordpress or Drupal, you're in luck. Contact Kelly (kelly@getdrizzle.com) and we can provide our WP plugin or Drupal module to make installation even smoother (via API key). This product is built mainly by @klyburke, @delgermurun and me with contributions from @lnmunhoz. 
+Drizzle paywall is a simple, scalable and user-friendly paywall, subscription and membership product for any publisher or online content creator. It's built using React, JS, Meteor, Node, MongoDB and is compatible with any web technology and stack. It's implemented natively, not via external JS file. The paywall takes about 30 min to set up and deploy and only 5 min to install it on any type of website. If you are on Wordpress or Drupal, you're in luck. Contact Kelly (kelly@getdrizzle.com) and we can provide our WP plugin or Drupal module to make installation even smoother (via API key). This product is built mainly by @klyburke, @delgermurun and me with contributions from @lnmunhoz. 
 
 #### Live example: https://coachesonly.breakingmuscle.com/business-development/how-to-stay-ahead-of-changes-in-personal-training
 
-License: General Public License v3.0. We also offer a commercial license in case you don't want to publish and distribute your content. The commercial license includes extra features (listed below), which are needed for particular types of online publishers, for example a metered paywall.
+License: General Public License v3.0. We also offer a commercial license in case you don't want to publicly publish and distribute your code. The commercial license includes extra features (listed below) that particular types of online publishers would need, for example a metered paywall.
 
 # Who this product is built for:
 - any publisher with premium content and who believes that advertising revenue should be supplemented with direct revenue;
@@ -11,22 +11,22 @@ License: General Public License v3.0. We also offer a commercial license in case
 - any website owner who has premium, valuable, unique content and wants to sell it via membership and subscriptions.
 
 # Why this product exists:
-In short, this product exists because the majority of publishers need an alternative revenue model as online ad revenue keeps declining.
+In short, this product exists because the majority of online publishers and content creators need an alternative revenue model as online ad revenue keeps declining. Many have great content that people are willing to pay for, but they don't have a simple way to put up a paywall or their current paywall is too diffcult to encourage users to pay. We've made this paywall easy to use on any website, and we've made the process of signing up and paying as seamless as possible.
 
-For more on that point, read:
+For more on ad revenue and why publishers must find alternative revenue sources, read:
 - Why Medium ditched ad-based business model and launches subscriptions: https://medium.com/@getdrizzle/subscriptions-on-medium-f23de6677464#.92s0vj4xa
 
 - Why online ad revenue is declining: https://medium.com/@getdrizzle/big-shifts-in-online-content-monetization-bdebd920bf4b#.oyjvxcqif
 
-- Why it is so hard for ad-supported business to pivot: 
+- Why it's so hard for ad-supported business to pivot: 
 https://medium.com/@getdrizzle/challenges-for-content-monetization-7a1b813ba19d#.wr3ousv2o
 
-If you're ready to try direct payments on your site, read about how you can get more paying users with this product: https://medium.com/@getdrizzle/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.y1ifi09us
+If you're ready to try direct payments on your site, check how you can get more paying users with this product: https://medium.com/@getdrizzle/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.y1ifi09us
 
 # Features
 ### Open-source license (this repo)
 - User-friendly paywall. Login with 2 clicks, pay with 2 clicks. Screenshots: https://medium.com/@getdrizzle/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.g0sx8k3km
-- Paywalled data is hidden via server-side method, not client-side.
+- Paywalled data is secure by hiding via server-side method, not client-side.
 - Paywall is server-side rendered.
 - Mobile-optimized.
 - Content performance metrics. See detailed analytics of user engagement on every web page with paywalled content:
@@ -37,28 +37,28 @@ If you're ready to try direct payments on your site, read about how you can get 
 - One-click refunds.
 - Stripe integration.
 - Customizable UI.
-- Social proof.
-- Curated lists: Newest, Popular lists.
+- Social proof. Show how many people have purchased your content to encourage others to sign up.
+- Content recommendations below each paywall. Curated lists include: Newest content, Popular content.
 - Footer bar and in-site links.
 - Mailgun and Mailchimp integration.
-- Welcome email and email notifications.
+- Set up a custom welcome email to new signups. Send email notifications to any group of users.
 - Set up single payments.
-- Set up subscriptions.
-- Set up Free Trial for subscriptions.
+- Set up monthly subscriptions.
+- Set up a Free Trial offer for subscriptions.
 - Ability to create single sign-on system accross multiple websites.
-- Set up on Wordpress or Drupal site via plugin or module (via API key).
+- Set up on Wordpress or Drupal site with our plugin or module (via API key).
 
 ### Commercial license
 - Paywall videos
 - Metered paywall
-- Lead generation (ask for verified email instead of payment)
+- Lead generation (ask for verified email address instead of a payment to access content)
 - Daily pass
-- Curated lists: Trending, Similar.
-- Referral feature
+- Additional content recommendations below each paywall. Curated lists: Trending content, Similar content.
+- Referral program
 - Discount code for subscriptions
 - Annual and Weekly subscriptions
 - Section-specific subscriptions
-- Export users data
+- Export user data
 
 # Setup of Publishers app (./publishers)
 In my local build, I use node v5.7.0 and npm 3.8.2 inside all apps.
@@ -69,7 +69,7 @@ To set node version:
 nvm use 5.7.0
 ```
 
-Publishers app is publisher's dashboard app, this is where publisher or website owner sets up subscription plan, monitors content performance and user payments. 
+Publishers app is the dashboard where the publisher or website owner sets up subscription plans, monitors content performance, and monitors user payments.
 
 In main folder, run:
 
@@ -103,10 +103,10 @@ Publishers app can be started locally by:
 ```
 ./start-local.sh
 ```
-Publishers app is using remote demo MongoDB. Feel free to specify local or remote MONGO_URL in the start-local.sh file.
+Publishers app uses remote demo MongoDB. Feel free to specify local or remote MONGO_URL in the start-local.sh file.
 Example of deployed Publishers app can be found here: https://app.getdrizzle.com/
 
-When you start app for the first time, DB will be seeded by a few documents: Admin user will be created (**users** collection), website (**products** collection) and paywalled page (**payg_content_walls** collection).
+When you start the app for the first time, DB will be seeded by a few documents: Admin user will be created (**users** collection), website (**products** collection) and paywalled page (**payg_content_walls** collection).
 
 App will be running at `http://localhost:8021/` To find email and password of your Admin user, go to:
 `./publishers/imports/startup/server/seeds.js`
@@ -115,7 +115,7 @@ You will log in and revisit http://localhost:8021/setup page after we are done w
 
 # Setup of Users apps (./users/..)
 
-Remember set up right node version, or later on gulp won't run.
+Remember to set up the right node version, or later on gulp it won't run.
 
 In ./users folder, run:
 
@@ -164,10 +164,10 @@ Navigate to http://localhost:8060, you should see:
 To see blue footer bar with call-to-action, go to http://localhost:8021/wall-settings and **Enable call to action footer bar**.
 
 # Deploy
-You will need to deploy 2 apps: Publishers app ( ./publishers) and Widget app (./users/widget). There is a detailed description for deployment of Meteor apps with mupx tool: https://github.com/tima101/meteor-deploy-letsencrypt
+You will need to deploy 2 apps: Publishers app ( ./publishers) and Widget app (./users/widget). Here is a detailed description for deployment of Meteor apps with mupx tool: https://github.com/tima101/meteor-deploy-letsencrypt
 
 # Future and Contributions
-This section will need more work. The next 3 steps for open-source project:
+This section will need more work. The next 3 steps for this open-source project:
 - Improve UI and UX on Publishers app (./publishers).
 - Meteor 1.5 to reduce initial bundle size for Widget app (./users/widget).
 - Add Apple pay for easier payments on Mobile.
