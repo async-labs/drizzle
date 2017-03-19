@@ -155,6 +155,9 @@ Go to http://localhost:8021/login, log in with your Admin user. Go to http://loc
 
 Navigate to http://localhost:8060, you should see: 
 
+![screen shot 2017-03-18 at 6 36 32 pm](https://cloud.githubusercontent.com/assets/10218864/24077416/e6bb4de4-0c09-11e7-8793-0282af325deb.png)
+
+![screen shot 2017-03-18 at 6 36 46 pm](https://cloud.githubusercontent.com/assets/10218864/24077420/ec05130c-0c09-11e7-83b1-c3fa9e082936.png)
 
 
 
