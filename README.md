@@ -5,6 +5,8 @@ Drizzle paywall is a simple, scalable and user-friendly paywall, subscription an
 
 License: General Public License v3.0. We also offer a commercial license in case you don't want to publicly publish and distribute your code. The commercial license includes extra features (listed below) that particular types of online publishers would need, for example a metered paywall.
 
+If instead of selling content, you're interested in detecting Adblock users and recovering ad revenue, check out our Adblock detector at this repo: https://github.com/tima101/Native-adblock-detector
+
 # Who this product is built for:
 - any publisher with premium content and who believes that advertising revenue should be supplemented with direct revenue;
 - any startup which sells premium content, digital products (example, videos), or premium features;
