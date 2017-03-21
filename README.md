@@ -171,5 +171,5 @@ This section will need more work. The next 3 steps for this open-source project:
 - Improve UI and UX on Publishers app (./publishers).
 - Meteor 1.5 to reduce initial bundle size for Widget app (./users/widget).
 - Add Apple pay for easier payments on Mobile.
-
+- Add client-side paywalling in addition to server-side.
 
