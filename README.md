@@ -4,11 +4,11 @@ Drizzle paywall is a simple, scalable and user-friendly paywall, subscription an
 ![paywall native](https://cloud.githubusercontent.com/assets/10218864/24305592/c3434a72-107a-11e7-8c04-6334a96b6d39.png)
 
 
-#### Live example of paywalled content: https://coachesonly.breakingmuscle.com/business-development/how-to-stay-ahead-of-changes-in-personal-training
+Live example of paywalled content: https://coachesonly.breakingmuscle.com/business-development/how-to-stay-ahead-of-changes-in-personal-training
 
-#### Live example of publisher's dashboard: https://app.getdrizzle.com/signup
+Live example of publisher's dashboard: https://app.getdrizzle.com/signup
 
-To help you decide if this product is what you need, read these 2 blog posts:
+**To help you decide if this product is what you need, read these 2 blog posts:**
 
 1) Part I: https://medium.com/drizzle-blog/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.i3kpg2vaq
 
