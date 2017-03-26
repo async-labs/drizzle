@@ -4,7 +4,9 @@ Drizzle paywall is a simple, scalable and user-friendly paywall, subscription an
 ![paywall native](https://cloud.githubusercontent.com/assets/10218864/24305592/c3434a72-107a-11e7-8c04-6334a96b6d39.png)
 
 
-#### Live example: https://coachesonly.breakingmuscle.com/business-development/how-to-stay-ahead-of-changes-in-personal-training
+#### Live example of paywalled content: https://coachesonly.breakingmuscle.com/business-development/how-to-stay-ahead-of-changes-in-personal-training
+
+#### Live example of publisher's dashboard: https://app.getdrizzle.com/signup
 
 License: General Public License v3.0. We also offer a commercial license in case you don't want to publicly publish and distribute your code. The commercial license includes extra features (listed below) that particular types of online publishers would need, for example a metered paywall.
 
@@ -44,6 +46,10 @@ If you're ready to try direct payments on your site, check how you can get more 
 - Customizable UI.
 - Social proof. Show how many people have purchased your content to encourage others to sign up.
 - Content recommendations below each paywall. Curated lists include: Newest content, Popular content.
+- Content search. User search. Search by date. 
+- Column sorting to identify best performing content.
+- Content categories.
+- Settings for individual pages.
 - Footer bar and in-site links.
 - Mailgun and Mailchimp integration.
 - Set up a custom welcome email to new signups. Send email notifications to any group of users.
