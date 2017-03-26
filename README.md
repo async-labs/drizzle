@@ -8,7 +8,15 @@ Drizzle paywall is a simple, scalable and user-friendly paywall, subscription an
 
 #### Live example of publisher's dashboard: https://app.getdrizzle.com/signup
 
-License: General Public License v3.0. We also offer a commercial license in case you don't want to publicly publish and distribute your code. The commercial license includes extra features (listed below) that particular types of online publishers would need, for example a metered paywall.
+To help you decide if this product is what you need, read these 2 blog posts:
+
+1) Part I: https://medium.com/drizzle-blog/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.i3kpg2vaq
+
+2) Part II: https://medium.com/drizzle-blog/how-to-get-more-paying-users-with-user-friendly-paywall-part-ii-8e09766f62eb#.dwv46xnoa
+
+# License
+
+General Public License v3.0. We also offer a commercial license in case you don't want to publicly publish and distribute your code. The commercial license includes extra features (listed below) that particular types of online publishers would need, for example a metered paywall.
 
 If instead of selling content, you're interested in detecting Adblock users and recovering ad revenue, check out our Adblock detector at this repo: https://github.com/tima101/Native-adblock-detector
 
@@ -28,10 +36,11 @@ For more on ad revenue and why publishers must find alternative revenue sources,
 - Why it's so hard for ad-supported business to pivot: 
 https://medium.com/@getdrizzle/challenges-for-content-monetization-7a1b813ba19d#.wr3ousv2o
 
-If you're ready to try direct payments on your site, check how you can get more paying users with this product: https://medium.com/@getdrizzle/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.y1ifi09us
 
 # Features
 ### Open-source license (this repo)
+- Email and Facebook signup and login. Email verification.
+- Payments, subscriptions, refunds via Stripe.
 - User-friendly paywall. Login with 2 clicks, pay with 2 clicks. Screenshots: https://medium.com/@getdrizzle/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.g0sx8k3km
 - Paywalled data is secure by hiding via server-side method, not client-side.
 - Paywall is server-side rendered.
@@ -52,7 +61,11 @@ If you're ready to try direct payments on your site, check how you can get more 
 - Settings for individual pages.
 - Footer bar and in-site links.
 - Mailgun and Mailchimp integration.
-- Set up a custom welcome email to new signups. Send email notifications to any group of users.
+- Set up a custom welcome email to new signups. 
+- Send email notifications to any group of users.
+- Send a custom email to individual user.
+- Send a custom email to group of users.
+- Group users by stage in sales funnel.
 - Set up single payments.
 - Set up monthly subscriptions.
 - Set up a Free Trial offer for subscriptions.
