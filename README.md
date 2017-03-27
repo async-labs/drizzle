@@ -137,6 +137,10 @@ App will be running at `http://localhost:8021/` To find email and password of yo
 
 You will log in and revisit http://localhost:8021/setup page after we are done with setting up Users apps.
 
+![screen shot 2017-03-27 at 10 22 26 am](https://cloud.githubusercontent.com/assets/10218864/24368977/61b353ec-12d7-11e7-9ae1-39b68473e760.png)
+
+
+
 # Setup of Users apps (./users/..)
 
 Remember to set up the right node version, or later on gulp it won't run.
