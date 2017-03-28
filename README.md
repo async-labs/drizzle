@@ -1,5 +1,5 @@
 # Drizzle paywall
-Drizzle paywall is a simple, scalable and user-friendly paywall, subscription and membership product for any publisher or online content creator: https://getdrizzle.com. It's built using React, JS, Meteor, Node, MongoDB and is compatible with any web technology and stack. It's implemented natively, not via external JS file. The paywall takes about 30 min to set up and deploy and only 5 min to install it on any type of website. If you are on Wordpress or Drupal, you're in luck. Contact Kelly (kelly@getdrizzle.com) and we can provide our WP plugin or Drupal module to make installation even smoother (via API key). This product is built mainly by @klyburke, @delgermurun and me with contributions from @lnmunhoz. 
+Drizzle paywall is a simple, scalable and user-friendly paywall, subscription and membership product for any publisher or online content creator: https://getdrizzle.com. It's built using React, JS, Meteor, Node, MongoDB and is compatible with any web technology and stack. It's implemented natively, not via external JS file. The paywall takes about 30 min to set up and deploy and only 5 min to install it on any type of website. This product is built mainly by @klyburke, @delgermurun and me with contributions from @lnmunhoz. 
 
 ![paywall native](https://cloud.githubusercontent.com/assets/10218864/24305592/c3434a72-107a-11e7-8c04-6334a96b6d39.png)
 
@@ -73,6 +73,7 @@ https://medium.com/@getdrizzle/challenges-for-content-monetization-7a1b813ba19d#
 - Set up on Wordpress or Drupal site with our plugin or module (via API key).
 
 ### Commercial license
+- Set up on Wordpress or Drupal with our plugin or module
 - Paywall videos
 - Metered paywall
 - Lead generation (ask for verified email address instead of a payment to access content)
