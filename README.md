@@ -8,17 +8,13 @@ Live example of paywalled content: https://coachesonly.breakingmuscle.com/busine
 
 Live example of publisher's dashboard: https://app.getdrizzle.com/signup
 
+If instead of selling content, you're interested in detecting Adblock users and recovering ad revenue, check out our Adblock detector at this repo: https://github.com/tima101/Native-adblock-detector
+
 **To help you decide if this product is what you need, read these 2 blog posts:**
 
 1) Part I: https://medium.com/drizzle-blog/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.i3kpg2vaq
 
 2) Part II: https://medium.com/drizzle-blog/how-to-get-more-paying-users-with-user-friendly-paywall-part-ii-8e09766f62eb#.dwv46xnoa
-
-# License
-
-General Public License v3.0. We also offer a commercial license in case you don't want to publicly publish and distribute your code. The commercial license includes extra features (listed below) that particular types of online publishers would need, for example a metered paywall.
-
-If instead of selling content, you're interested in detecting Adblock users and recovering ad revenue, check out our Adblock detector at this repo: https://github.com/tima101/Native-adblock-detector
 
 # Who this product is built for:
 - any publisher with premium content and who believes that advertising revenue should be supplemented with direct revenue;
@@ -202,3 +198,6 @@ This section will need more work. The next 3 steps for this open-source project:
 - Add Apple pay for easier payments on Mobile.
 - Add client-side paywalling in addition to server-side.
 
+# License
+
+[GPLv3](https://github.com/Drizzle-paywall/paywall-membership-subscription/blob/master/LICENSE). For the commercial license, contact kelly@getdrizzle.com.
