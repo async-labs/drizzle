@@ -35,46 +35,45 @@ https://medium.com/@getdrizzle/challenges-for-content-monetization-7a1b813ba19d#
 
 # Features
 ### Open-source license (this repo)
-- Email and Facebook signup and login. Email verification.
-- Payments, subscriptions, refunds via Stripe.
+- Email and Facebook signup and login, Email verification
+- Payments, subscriptions, refunds via Stripe
 - User-friendly paywall. Login with 2 clicks, pay with 2 clicks. Screenshots: https://medium.com/@getdrizzle/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.g0sx8k3km
-- Paywalled data is secure by hiding via server-side method, not client-side.
-- Paywall is server-side rendered.
-- Mobile-optimized.
+- Paywalled data is secure by hiding via server-side method, not client-side
+- Paywall is server-side rendered
+- Mobile-optimized
 - Content performance metrics. See detailed analytics of user engagement on every web page with paywalled content:
 ![screen shot 2017-03-18 at 11 39 01 am](https://cloud.githubusercontent.com/assets/10218864/24074929/93ad21de-0bcf-11e7-98a8-c9e01b9ccd98.png)
 - Complete membership management. Get detailed analytics for every user and how he/she engages with your content. Segments users who are in each stage of your subscription sales funnel:
 ![screen shot 2017-03-18 at 11 40 12 am](https://cloud.githubusercontent.com/assets/10218864/24074944/af9c9348-0bcf-11e7-8969-c59ac1a39b3d.png)
-- Payments and Payouts analytics.
-- One-click refunds.
-- Stripe integration.
-- Customizable UI.
-- Social proof. Show how many people have purchased your content to encourage others to sign up.
-- Content recommendations below each paywall. Curated lists include: Newest content, Popular content.
-- Content search. User search. Search by date. 
-- Column sorting to identify best performing content.
-- Content categories.
-- Settings for individual pages.
-- Footer bar and in-site links.
-- Mailgun and Mailchimp integration.
-- Set up a custom welcome email to new signups. 
-- Send email notifications to any group of users.
-- Send a custom email to individual user.
-- Send a custom email to group of users.
-- Group users by stage in sales funnel.
-- Set up single payments.
-- Set up monthly subscriptions.
-- Set up a Free Trial offer for subscriptions.
-- Ability to create single sign-on system accross multiple websites.
-- Set up on Wordpress or Drupal site with our plugin or module (via API key).
+- Payments and Payouts analytics
+- One-click refunds
+- Stripe integration
+- Customizable UI
+- Social proof: Show how many people have purchased your content to encourage others to sign up
+- Content recommendations below each paywall, Curated lists include: Newest content, Popular content
+- Content search, User search, Search by date
+- Column sorting to identify best performing content
+- Content categories
+- Settings for individual pages
+- Footer bar and in-site links
+- Mailgun and Mailchimp integration
+- Set up a custom welcome email to new signups
+- Send email notifications to any group of users
+- Send a custom email to individual user
+- Send a custom email to group of users
+- Group users by stage in sales funnel
+- Set up single payments
+- Set up monthly subscriptions
+- Set up a Free Trial offer for subscriptions
+- Ability to create single sign-on system accross multiple websites
 
 ### Commercial license
-- Set up on Wordpress or Drupal with our plugin or module
+- Set up on Wordpress or Drupal with our plugin or module (via API key)
 - Paywall videos
 - Metered paywall
 - Lead generation (ask for verified email address instead of a payment to access content)
 - Daily pass
-- Additional content recommendations below each paywall. Curated lists: Trending content, Similar content.
+- Additional content recommendations below each paywall. Curated lists: Trending content, Similar content
 - Referral program
 - Discount code for subscriptions
 - Annual and Weekly subscriptions
