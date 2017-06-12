@@ -8,9 +8,11 @@ import Toggle from 'react-toggle';
 import { error } from '../../notifier';
 
 import ToggleAutoDecryption from '../containers/ToggleAutoDecryption';
+import ToggleMeteredPaywall from '../containers/ToggleMeteredPaywall';
 import ToggleMicropayment from '../containers/ToggleMicropayment';
 import ToggleUpselling from '../containers/ToggleUpselling';
 import ToggleExpiration from '../containers/ToggleExpiration';
+import ToggleLeadGeneration from '../containers/ToggleLeadGeneration';
 import ConfigGuestButtonText from '../containers/ConfigGuestButtonText';
 import ToggleViewportConfig from '../containers/ToggleViewportConfig';
 
@@ -23,10 +25,12 @@ export default class ManageContentWall extends Component {
     this.toggleFixedPricing = this.toggleFixedPricing.bind(this);
     this.toggleVideo = this.toggleVideo.bind(this);
     this.saveContent = this.saveContent.bind(this);
+    this.saveVimeoVideoUrl = this.saveVimeoVideoUrl.bind(this);
     this.saveAutoDecryptionConfig = this.saveAutoDecryptionConfig.bind(this);
     this.savePrice = this.savePrice.bind(this);
     this.saveImage = this.saveImage.bind(this);
     this.fileChanged = this.fileChanged.bind(this);
+    this.changePlan = this.changePlan.bind(this);
     this.changeCategory = this.changeCategory.bind(this);
 
     this.state = {
@@ -138,6 +142,24 @@ export default class ManageContentWall extends Component {
     });
   }
 
+  saveVimeoVideoUrl(event) {
+    event.preventDefault();
+
+    const { wall, saveVimeoVideoUrl } = this.props;
+
+    return saveVimeoVideoUrl({
+      id: wall._id,
+      vimeoVideoUrl: event.target.vimeoVideoUrl.value,
+    });
+  }
+
+  changePlan(event) {
+    const planId = event.target.value || undefined;
+    const { wall, changePlan } = this.props;
+
+    changePlan({ wallId: wall._id, planId });
+  }
+
   changeCategory(event) {
     const id = event.target.value;
     const { wall, changeCategory } = this.props;
@@ -221,6 +243,82 @@ export default class ManageContentWall extends Component {
     );
   }
 
+  renderVideoFrom() {
+    const { fileInfo } = this.state;
+
+    const { wall, isVimeoConnected } = this.props;
+    const { isVideo } = wall;
+    const content = wall.content || {};
+
+    let video = '';
+    if (isVideo) {
+      const thumb = content.thumbnail || 'https://s3-us-west-1.amazonaws.com/zenmarket/video-placeholder.png';
+
+      video = (
+        <div className="file-upload text-center">
+          <img
+            alt="Thumbnail"
+            className="file-upload-thumbnail"
+            src={thumb}
+          />
+
+          <form onSubmit={this.saveImage}>
+            <label htmlFor="thumbnail-image" className="file-upload-button">
+              <span>Upload thumbnail</span>
+              <input
+                type="file"
+                accept="image/*"
+                ref={node => {
+                  this.thumbnailNode = node;
+                }}
+                onChange={this.fileChanged}
+              />
+            </label>
+            <br />
+            <span style={{ fontSize: '11px' }}>{fileInfo}</span>
+
+            <span className="file-upload-placeholder">
+              Your placeholder image must be under 512KB
+            </span>
+
+            <button className="btn btn-primary margin-t-20" type="submit">
+              Save
+            </button>
+          </form>
+
+          <p>Or</p>
+
+          {isVimeoConnected
+            ? <form onSubmit={this.saveVimeoVideoUrl}>
+              <span>Link to Vimeo video: </span>
+              <input
+                name="vimeoVideoUrl"
+                defaultValue={wall.content.vimeoVideoUrl || ''}
+                style={{ width: '270px' }}
+                placeholder="https://vimeo.com/182750960"
+              />
+
+              <button className="btn btn-primary margin-t-20" type="submit">
+                Save
+              </button>
+            </form>
+            : <span><a href="/wall-settings">Connect your Vimeo account</a>.</span>
+          }
+        </div>
+      );
+    }
+
+    return (
+      <ConfigurationToggle
+        name="Is it a video?"
+        onToggle={this.toggleVideo}
+        toggled={isVideo}
+      >
+          {video}
+      </ConfigurationToggle>
+    );
+  }
+
   renderEmbedCode() {
     const { wall } = this.props;
     const content = wall.content || {};
@@ -275,16 +373,25 @@ export default class ManageContentWall extends Component {
             {this.renderPricing()}
           </div>
           <div className="col-md-12" style={styles.col}>
+            <ToggleLeadGeneration wall={wall} />
+          </div>
+          <div className="col-md-12" style={styles.col}>
             <ToggleExpiration wall={wall} />
           </div>
           <div className="col-md-12" style={styles.col}>
             <ToggleViewportConfig wall={wall} />
           </div>
           <div className="col-md-12" style={styles.col}>
+            <ToggleMeteredPaywall wall={wall} />
+          </div>
+          <div className="col-md-12" style={styles.col}>
             <ToggleAutoDecryption wall={wall} />
           </div>
           <div className="col-md-12" style={styles.col}>
             <ToggleUpselling wall={wall} />
+          </div>
+          <div className="col-md-12" style={styles.col}>
+            {this.renderVideoFrom()}
           </div>
         </div>
 
@@ -296,6 +403,38 @@ export default class ManageContentWall extends Component {
             {this.renderEmbedCode()}
           </div> : null}
       </div>
+    );
+  }
+
+  renderPlans() {
+    const { plans, wall } = this.props;
+    const currentPlanId = wall.subscriptionPlanIds && wall.subscriptionPlanIds[0] || '';
+
+    if (!plans || !plans.length === 0) {
+      return null;
+    }
+
+    return (
+      <p>
+        Section-specific: <select
+          onChange={this.changePlan}
+          value={currentPlanId}
+        >
+          <option value="">
+            No plan
+          </option>
+          {
+            plans.map((plan) =>
+              <option
+                value={plan._id}
+                key={plan._id}
+              >
+                {plan.name} - ${(plan.price / 100).toFixed(2)}/{plan.getPeriodString()}
+              </option>
+            )
+          }
+        </select>
+      </p>
     );
   }
 
@@ -378,6 +517,7 @@ export default class ManageContentWall extends Component {
             Created: {moment(wall.createdAt).format('DD MMM YYYY')}
           </p>
 
+          {this.renderPlans()}
           {this.renderCategories()}
           {this.renderUpsellingButton()}
         </div>
@@ -430,11 +570,15 @@ ManageContentWall.propTypes = {
   toggleDisabled: PropTypes.func.isRequired,
   saveContent: PropTypes.func.isRequired,
   saveImage: PropTypes.func.isRequired,
+  saveVimeoVideoUrl: PropTypes.func.isRequired,
   toggleAutoDecryption: PropTypes.func.isRequired,
   toggleFixedPricing: PropTypes.func.isRequired,
   saveAutoDecryptionConfig: PropTypes.func.isRequired,
   saveFixedPrice: PropTypes.func.isRequired,
   toggleVideo: PropTypes.func.isRequired,
+  toggleLeadGeneration: PropTypes.func.isRequired,
+  changePlan: PropTypes.func.isRequired,
+  plans: PropTypes.array.isRequired,
   changeCategory: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
   updateEmbedlyData: PropTypes.func.isRequired,

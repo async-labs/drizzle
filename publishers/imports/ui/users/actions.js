@@ -58,6 +58,22 @@ export function setPassword({ token, password }, callback) {
   });
 }
 
+export function exportUsersToCSV(params) {
+  Meteor.call('productUsers.exportToCSV', params, (err, csv) => {
+    if (!err) {
+      const encodedUri = encodeURI(`data:text/csv;charset=utf-8,${csv}`);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'drizzle_users.csv');
+      document.body.appendChild(link); // Required for FF
+
+      link.click();
+    } else {
+      error(err);
+    }
+  });
+}
+
 export function exportWallCharges({ productId, startDate, endDate, filter }) {
   Meteor.call('wallCharges.export', { productId, startDate, endDate, filter }, (err, csv) => {
     if (!err) {

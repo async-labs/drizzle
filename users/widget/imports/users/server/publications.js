@@ -11,6 +11,7 @@ Meteor.publish(null, function loggedInUsers() {
     //   walletBalance: 1,
     //   depositBalance: 1,
     //   isCardDeclined: 1,
+    //   weeklySubscribedProducts: 1,
     //   subscribedProducts: 1,
     //   profile: 1,
     // },

@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import { FlowRouter } from 'meteor/kadira:flow-router';
+
 import CopyButton from '../../common/copyButton/components/CopyButton.jsx';
 
 export default class WordpressSetup extends Component {
@@ -8,6 +10,39 @@ export default class WordpressSetup extends Component {
 
     this.generateKey = this.generateKey.bind(this);
     this.deleteKey = this.deleteKey.bind(this);
+
+    this.state = {
+      buttonStyle: { border: '0px #888 solid' },
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    const { isGuiding, isKeyInstalled } = this.props;
+
+    if (isGuiding && !prevProps.isGuiding && !this.intervalId) {
+      this.intervalId = setInterval((comp) => {
+        const { buttonStyle } = comp.state;
+        const border = buttonStyle.border === '1px #888 solid' ? '0px #888 solid' : '1px #888 solid';
+        comp.setState({ buttonStyle: { border } });
+      }, 2500, this);
+    }
+
+    if (isKeyInstalled && prevProps.isGuiding) {
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = undefined;
+      }
+
+      if (isGuiding) {
+        FlowRouter.go('/wall-settings');
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   deleteKey(event) {
@@ -30,11 +65,14 @@ export default class WordpressSetup extends Component {
   }
 
   renderGenerateButton() {
+    const { buttonStyle } = this.state;
+
     return (
       <button
         type="button"
         className="btn btn-primary"
         onClick={this.generateKey}
+        style={buttonStyle}
       >
         Generate API key
       </button>
@@ -43,6 +81,7 @@ export default class WordpressSetup extends Component {
 
   renderKeyButtons() {
     const { apiKey, isKeyInstalled } = this.props;
+    const { buttonStyle } = this.state;
 
     return (
       <div>
@@ -62,7 +101,7 @@ export default class WordpressSetup extends Component {
         </div>
 
         <div>
-          <CopyButton target="#wpPlugin-apikey" text="Copy API key" />
+          <CopyButton target="#wpPlugin-apikey" text="Copy API key" style={buttonStyle} />
 
           <button
             type="button"
@@ -130,4 +169,5 @@ WordpressSetup.propTypes = {
   isKeyInstalled: PropTypes.bool,
   deleteKey: PropTypes.func.isRequired,
   generateKey: PropTypes.func.isRequired,
+  isGuiding: PropTypes.bool,
 };

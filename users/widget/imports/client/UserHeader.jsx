@@ -9,12 +9,27 @@ import { Meteor } from 'meteor/meteor';
 
 import { getCurrentProduct } from '/imports/products/client/api';
 import { ProductUsers } from 'meteor/drizzle:models';
+import ReferralMessage from '/imports/referral/client/containers/ReferralMessage';
+import DailyAccess from '/imports/dailyAccess/client/containers/DailyAccess';
 import VerifyEmail from '/imports/users/client/containers/VerifyEmail';
+
+const renderReferralMessage = (user, productUser) => {
+  if (user && user.emails && !user.emails[0].verified) {
+    return null;
+  }
+
+  if (productUser && productUser.getPendingReferral()) {
+    return <ReferralMessage />;
+  }
+
+  return null;
+};
 
 const UserHeader = ({
   product,
   user,
   isCardDeclined,
+  isReferralEnabled,
   hasFreeAccess,
 }) => {
   const tabs = [{
@@ -44,8 +59,20 @@ const UserHeader = ({
     tabs.splice(0, 1);
   }
 
+  if (isReferralEnabled) {
+    tabs.push({
+      path: '/referral',
+      label: 'Referrals',
+      faIcon: 'fa-users',
+      isActive: ActiveRoute.name('referral'),
+    });
+  }
+
+
   return (
     <div>
+      {renderReferralMessage(user, user.getProductUser(product._id))}
+      <DailyAccess />
       {!user.isEmailVerified() ? <VerifyEmail /> : null}
 
       {isCardDeclined ?
@@ -86,6 +113,7 @@ UserHeader.propTypes = {
   depositBalance: PropTypes.number.isRequired,
   isOwner: PropTypes.bool.isRequired,
   isCardDeclined: PropTypes.bool.isRequired,
+  isReferralEnabled: PropTypes.bool.isRequired,
   hasFreeAccess: PropTypes.bool.isRequired,
   user: PropTypes.object,
 };
@@ -125,6 +153,7 @@ function headerComposer(props, onData) {
     user,
     hasFreeAccess,
     isCardDeclined: !!user.isCardDeclined,
+    isReferralEnabled: product.isReferralEnabled(),
   });
 }
 

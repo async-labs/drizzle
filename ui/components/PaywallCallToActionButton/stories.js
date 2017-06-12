@@ -9,6 +9,7 @@ const minProps = {
   },
   wall: {
     donationEnabled: false,
+    isVideo: false,
     price: 25,
     disableMicropayment: false,
   },
@@ -30,8 +31,22 @@ storiesOf('PaywallCallToActionButton', module)
       {...minProps}
       wall={{
         donationEnabled: true,
+        isVideo: false,
         price: 25,
         disableMicropayment: false,
       }}
     />
   ))
+  .addWithInfo('with video text',
+    `
+      The video text requires:
+      - wall with isVideo={true} and donationEnabled={false}
+    `,
+    () => (
+      <PaywallCallToActionButton
+        {...minProps}
+        wall={{
+          isVideo: true,
+        }}
+      />
+    ));

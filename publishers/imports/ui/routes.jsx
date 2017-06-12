@@ -1,8 +1,10 @@
 import React from 'react';
 import { mount } from 'react-mounter';
 
+import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
+import { error, success } from './notifier';
 import MainLayout from './layouts/containers/MainLayout';
 import NotFound from './layouts/components/NotFound.jsx';
 
@@ -13,6 +15,8 @@ import Subscriptions from './subscriptions/containers/Subscriptions';
 import Payout from './payout/containers/Payout';
 import MonthlyIncomeGraph from './payout/containers/MonthlyIncomeGraph';
 
+import DailyAccessChart from './dailyAccess/containers/DailyAccessChart';
+
 import Notifications from './emails/containers/Notifications';
 import Setup from './setup/containers/Setup';
 import WidgetUI from './widgetUI/containers/WidgetUI';
@@ -22,6 +26,8 @@ import ManageContentWall from './contentWalls/containers/ManageContentWall';
 import AddContentWall from './contentWalls/containers/AddContentWall';
 import WallSettings from './contentWalls/containers/WallSettings';
 import SubscriptionConfig from './subscriptions/containers/SubscriptionConfig';
+
+import ConnectVimeo from './vimeo/components/ConnectVimeo';
 
 import Products from './products/containers/Products';
 // import Verify from './products/containers/Verify';
@@ -98,6 +104,15 @@ FlowRouter.route('/payout/monthly-graph', {
   },
 });
 
+FlowRouter.route('/daily-access', {
+  name: 'daily-access',
+  action() {
+    mount(MainLayout, {
+      content: <DailyAccessChart />,
+    });
+  },
+});
+
 FlowRouter.route('/emails', {
   name: 'notifications',
   action() {
@@ -143,6 +158,16 @@ FlowRouter.route('/websites', {
   },
 });
 
+/*
+FlowRouter.route('/websites/verify/:id', {
+  name: 'websites.verify',
+  action(params) {
+    mount(MainLayout, {
+      content: <Verify productId={params.id} />,
+    });
+  },
+});*/
+
 FlowRouter.route('/websites/add', {
   name: 'websites.add',
   action() {
@@ -151,6 +176,33 @@ FlowRouter.route('/websites/add', {
     });
   },
 });
+
+FlowRouter.route('/vimeo/connect', {
+  name: 'connect.vimeo',
+  action(params, queryParams) {
+    const { state, code, error: errorCode } = queryParams;
+
+    if (errorCode) {
+      error(errorCode);
+      FlowRouter.go('/wall-settings');
+    } else {
+      Meteor.call('vimeo.getAccessToken', { state, code }, (err) => {
+        if (err) {
+          error(err);
+        } else {
+          success('Connected to Vimeo');
+        }
+
+        FlowRouter.go('/wall-settings');
+      });
+    }
+
+    mount(MainLayout, {
+      content: <ConnectVimeo />,
+    });
+  },
+});
+
 
 FlowRouter.notfound = {
   action() {

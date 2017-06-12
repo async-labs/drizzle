@@ -20,6 +20,12 @@ const handleCallback = (err) => {
 };
 
 
+export const toggleDailyAccess = ({ productId, state }) =>
+  Meteor.call('products.toggleDailyAccess', { productId, state }, handleCallback);
+
+export const updateDailyAccessPrice = ({ productId, price }) =>
+  Meteor.call('products.updateDailyAccessPrice', { productId, price }, handleCallback);
+
 export const togglePAYG = ({ productId, state }) =>
   togglePAYGMethod.call({ productId, state }, handleCallback);
 
@@ -31,6 +37,13 @@ export const configGuestButtonText = ({ productId, guestButtonText }) =>
 
 export const configGuestMessageText = ({ productId, guestMessageText }) =>
   Meteor.call('products.configGuestMessageText', { productId, guestMessageText }, handleCallback);
+
+
+export const configFreeArticleCount = ({ productId, count }) =>
+  Meteor.call('products.configFreeArticleCount', { productId, count }, handleCallback);
+
+export const disableFreeArticle = ({ productId }) =>
+  Meteor.call('products.disableFreeArticle', productId, handleCallback);
 
 
 export const toggleSocialProof = ({ productId, state }) =>

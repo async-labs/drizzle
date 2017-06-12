@@ -7,6 +7,8 @@ import {
   Tooltip as BSTooltip,
 } from 'react-bootstrap';
 
+import DailyAccessCharges from '../../dailyAccess/containers/DailyAccessCharges';
+
 import DailyIncome from '../containers/DailyIncome';
 import SinglePayments from '../containers/SinglePayments';
 import SubscriptionList from '../containers/SubscriptionList';
@@ -70,6 +72,7 @@ export default class Payout extends Component {
 
       wallIncome,
       subscriptionIncome,
+      dailyAccessIncome,
       totalIncome,
 
       monthIncome,
@@ -146,6 +149,9 @@ export default class Payout extends Component {
 
         <SubscriptionList monthPeriod={monthPeriod} product={product} />
         <SinglePayments monthPeriod={monthPeriod} product={product} />
+        {product.isDailyAccessEnabled() ?
+          <DailyAccessCharges monthPeriod={monthPeriod} product={product} />
+          : null}
 
         <div className="row">
           <div className="col-xs-12">
@@ -159,6 +165,11 @@ export default class Payout extends Component {
                   <td>Total via paid subscriptions as of today:</td>
                   <td>${(subscriptionIncome / 100).toFixed(2)}</td>
                 </tr>
+                {product.isDailyAccessEnabled() ?
+                  <tr>
+                    <td>Total via paid daily accesses as of today:</td>
+                    <td>${(dailyAccessIncome / 100).toFixed(2)}</td>
+                  </tr> : null}
                 <tr>
                   <td>Total via all channels as of today:</td>
                   <td>${(totalIncome / 100).toFixed(2)}</td>
@@ -178,6 +189,7 @@ Payout.propTypes = {
 
   subscriptionIncome: PropTypes.number.isRequired,
   wallIncome: PropTypes.number.isRequired,
+  dailyAccessIncome: PropTypes.number.isRequired,
   totalIncome: PropTypes.number.isRequired,
 
   monthIncome: PropTypes.number,

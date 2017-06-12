@@ -26,7 +26,7 @@ function paymentSucceeded(obj) {
   }
 
   const { subscriptionId, productId } = subObj.metadata;
-  if (!subscriptionId || !productId) {
+  if (!subscriptionId) {
     return;
   }
 
@@ -60,7 +60,8 @@ function paymentSucceeded(obj) {
       createdAt: new Date(),
       stripeInvoiceId: obj.id,
     },
-    _.pick(subscription, 'userId', 'productId', 'vendorId', 'monthly', 'stripeSubscriptionId')
+    _.pick(subscription, 'userId', 'productId', 'vendorId', 'monthly', 'stripeSubscriptionId',
+      'annual', 'weekly', 'planId')
   );
 
   if (subscription.isFreeTrial) {

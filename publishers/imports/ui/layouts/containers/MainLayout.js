@@ -59,6 +59,17 @@ function composer(props, onData) {
     return;
   }
 
+  /* const product = currentProduct();
+  if (product) {
+    const currentPath = FlowRouter.current().path;
+    Meteor.call('products.getWalkthroughStep', product._id, (err, step) => {
+      if (step && step.path && step.path !== currentPath &&
+          (!step.nextPath || step.nextPath !== currentPath)) {
+        FlowRouter.go(step.path);
+      }
+    });
+  }*/
+
   onData(null,
     { isLoggedIn,
       isLoading,

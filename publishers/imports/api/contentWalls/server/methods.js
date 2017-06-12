@@ -1,6 +1,8 @@
 import { parse } from 'url';
+import path from 'path';
 import moment from 'moment';
 import cheerio from 'cheerio';
+import { Vimeo } from 'vimeo';
 
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
@@ -9,7 +11,7 @@ import { HTTP } from 'meteor/http';
 import { EmbedlyAdapter } from 'meteor/drizzle:integrations';
 import { checkOwnerAndSetup } from 'meteor/drizzle:check-functions';
 import { getScore } from 'meteor/drizzle:util';
-import { deleteObject } from 'meteor/drizzle:s3';
+import { deleteObject, getSignedUrl, putObject } from 'meteor/drizzle:s3';
 
 import {
   Products,
@@ -27,6 +29,82 @@ function getPath(origUrl) {
   }
 
   return url;
+}
+
+function generateThumbnails(videoUrl, product, wall) {
+  const { vimeoToken } = product;
+
+  if (!vimeoToken || !vimeoToken.isConnected || !vimeoToken.accessToken) {
+    return;
+  }
+
+  const lib = new Vimeo(
+    Meteor.settings.Vimeo.clientId,
+    Meteor.settings.Vimeo.clientSecret,
+    product.vimeoToken.accessToken
+  );
+
+  const parsedUrl = parse(videoUrl);
+  const videoId = parsedUrl.pathname.replace(/\//g, '');
+
+  const syncRequest = Meteor.wrapAsync(lib.request, lib);
+
+  const videoDetail = syncRequest({
+    method: 'GET',
+    path: `/videos/${videoId}`,
+  });
+
+  const period = videoDetail.duration / 11;
+
+  const thumbnails = [];
+
+  for (let i = 1; i < 11; i++) {
+    const thumbnail = syncRequest({
+      method: 'POST',
+      path: `/videos/${videoId}/pictures`,
+      query: {
+        time: period * i,
+      },
+    });
+
+    if (!thumbnail || !thumbnail.sizes || !thumbnail.sizes[0]) {
+      return;
+    }
+
+    const largestImage = thumbnail.sizes[thumbnail.sizes.length - 1];
+
+    const extName = path.extname(parse(largestImage.link).pathname);
+    const fileName = path.basename(parse(largestImage.link).pathname);
+
+    const key = `thumbnails/${wall._id}-${fileName}`;
+
+    const readImage = HTTP.get(largestImage.link, { npmRequestOptions: { encoding: null } });
+
+    const params = {
+      Bucket: Meteor.settings.S3bucket,
+      ACL: 'public-read',
+      Key: key,
+      ContentType: `image/${extName.substr(1)}`,
+      Body: readImage.content,
+    };
+
+    putObject(params);
+
+    const thumbnailUrl = getSignedUrl({
+      Bucket: Meteor.settings.S3bucket,
+      Key: key,
+    });
+
+    const parsedThumbnailUrl = parse(thumbnailUrl);
+
+    thumbnails.push(`https://${parsedThumbnailUrl.host}${parsedThumbnailUrl.pathname}`);
+  }
+
+  if (thumbnails.length > 0) {
+    ContentWalls.update(wall._id, { $set: {
+      'content.thumbnails': thumbnails,
+    } });
+  }
 }
 
 Meteor.methods({
@@ -201,6 +279,31 @@ Meteor.methods({
     }
   },
 
+  'contentWall/saveVimeoVideoUrl'(wallId, videoUrl) {
+    check(wallId, String);
+    check(videoUrl, String);
+
+    const wall = ContentWalls.findOne(wallId);
+    if (!wall) {
+      throw new Meteor.Error('invalid-data', 'Invalid data');
+    }
+
+    if (videoUrl && !videoUrl.startsWith('https://vimeo.com')) {
+      throw new Meteor.Error('invalid-data', 'Video is not from vimeo');
+    }
+
+    const product = Products.findOne(wall.productId);
+    checkOwnerAndSetup({ product, user: Meteor.user() });
+
+    ContentWalls.update(wallId, { $set: {
+      'content.vimeoVideoUrl': videoUrl,
+    } });
+
+    if (videoUrl) {
+      generateThumbnails(videoUrl, product, wall);
+    }
+  },
+
   'contentWall/removeUrl'(wallId) {
     check(wallId, String);
 
@@ -285,6 +388,25 @@ Meteor.methods({
       ContentWalls.update(wallId, { $set: { fixedPricing: true } });
     } else {
       ContentWalls.update(wallId, { $unset: { fixedPricing: 1 } });
+    }
+  },
+
+  'contentWall/toggleVideo'(wallId, state) {
+    check(wallId, String);
+    check(state, Boolean);
+
+    const wall = ContentWalls.findOne(wallId);
+    if (!wall) {
+      throw new Meteor.Error('invalid-data', 'Invalid data');
+    }
+
+    const product = Products.findOne(wall.productId);
+    checkOwnerAndSetup({ product, user: Meteor.user() });
+
+    if (state) {
+      ContentWalls.update(wallId, { $set: { isVideo: true } });
+    } else {
+      ContentWalls.update(wallId, { $unset: { isVideo: 1 } });
     }
   },
 

@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
-import { Products, Subscriptions } from 'meteor/drizzle:models';
+import { Products, Plans, Subscriptions } from 'meteor/drizzle:models';
 
 Meteor.publishComposite('subscriptions/listByProduct', function listByProduct(params) {
   check(params, {
@@ -39,4 +39,23 @@ Meteor.publishComposite('subscriptions/listByProduct', function listByProduct(pa
       },
     }],
   };
+});
+
+Meteor.publish('subscriptions.plansByProductId', function plansByProductId(params) {
+  check(params, {
+    productId: String,
+  });
+
+  if (!this.userId) {
+    return this.ready();
+  }
+
+  const { productId } = params;
+
+  const product = Products.findOne(productId, { fields: { vendorUserId: 1 } });
+  if (!product || !product.isOwner(this.userId)) {
+    return this.ready();
+  }
+
+  return Plans.find({ productId });
 });

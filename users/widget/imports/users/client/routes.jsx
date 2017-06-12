@@ -9,6 +9,7 @@ import RecoverPasswordForm from './containers/RecoverPassword';
 
 import Login from './containers/Login';
 import Register from './containers/Register';
+import PromoCode from './containers/PromoCode';
 
 
 FlowRouter.route('/login', {
@@ -43,6 +44,14 @@ FlowRouter.route('/recover-password', {
   action() {
     mount(Layout, {
       content: <RecoverPasswordForm />,
+    });
+  },
+});
+
+FlowRouter.route('/promo-code', {
+  action() {
+    mount(Layout, {
+      content: <PromoCode />,
     });
   },
 });

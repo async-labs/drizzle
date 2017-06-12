@@ -61,7 +61,7 @@ Accounts.onCreateUser((options, newUser) => {
   return user;
 });
 
-Accounts.urls.verifyEmail = (token) => `${Meteor.settings.PUBLISHER_ROOT_URL}/auth/verify/${token}`;
+Accounts.urls.verifyEmail = (token) => `https://app.getdrizzle.com/auth/verify/${token}`;
 
 Accounts.onLogin((info) => {
   const email = info.user && _.last(info.user.emails);
@@ -107,7 +107,8 @@ Accounts.emailTemplates.verifyEmail.html = (user, url) => {
 Accounts.emailTemplates.resetPassword.text = () => null;
 Accounts.emailTemplates.verifyEmail.text = () => null;
 
-Accounts.urls.resetPassword = (token) => `${Meteor.settings.PUBLISHER_ROOT_URL}/auth/recover-password/${token}`;
+
+Accounts.urls.resetPassword = (token) => `https://app.getdrizzle.com/auth/recover-password/${token}`;
 
 Accounts.config({
   sendVerificationEmail: true,

@@ -4,6 +4,8 @@ import moment from 'moment';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 
+import { Plans } from 'meteor/drizzle:models';
+
 import { currentProduct } from '../../products/currentProduct';
 import {
   getMonthlyDatePeriod,
@@ -17,7 +19,29 @@ const subscriberCountVar = new ReactiveVar(undefined);
 const unsubscriberCountVar = new ReactiveVar(undefined);
 const paywallCountVar = new ReactiveVar(undefined);
 
-function getSelectedPlan({ product }) {
+function getSelectedPlan({ product, selectedId }) {
+  if (selectedId === 'weekly' &&
+      product.isWeeklySubscriptionEnabled()
+  ) {
+    return {
+      _id: 'weekly',
+      price: product.weeklySubscription.amount,
+    };
+  }
+
+  if (selectedId === 'annual' &&
+      product.isAnnualSubscriptionEnabled()
+  ) {
+    return {
+      _id: 'annual',
+      price: product.annualSubscription.amount,
+    };
+  }
+
+  if (selectedId) {
+    return Plans.findOne(selectedId);
+  }
+
   if (product.isMonthlySubscriptionEnabled()) {
     return {
       _id: '',
@@ -25,12 +49,16 @@ function getSelectedPlan({ product }) {
     };
   }
 
-  return {};
+  return Plans.findOne();
 }
 
 function composer(props, onData) {
   const product = currentProduct();
   if (!product) { return null; }
+
+  if (!Meteor.subscribe('subscriptions.plansByProductId', { productId: product._id }).ready()) {
+    return null;
+  }
 
   const selectedId = props.id;
   const selectedPlan = getSelectedPlan({ product, selectedId });
@@ -58,13 +86,30 @@ function composer(props, onData) {
     return null;
   }
 
-  const plans = [];
+  const plans = Plans.find({ productId: product._id }).fetch();
+
+  if (product.isWeeklySubscriptionEnabled()
+  ) {
+    plans.splice(0, 0, {
+      name: 'Site-wide weekly',
+      _id: 'weekly',
+      price: product.weeklySubscription.amount,
+    });
+  }
 
   if (product.isMonthlySubscriptionEnabled()) {
     plans.splice(0, 0, {
       name: 'Site-wide monthly',
       _id: '',
       price: product.subscription.amount,
+    });
+  }
+
+  if (product.isAnnualSubscriptionEnabled()) {
+    plans.splice(0, 0, {
+      name: 'Site-wide annual',
+      _id: 'annual',
+      price: product.annualSubscription.amount,
     });
   }
 

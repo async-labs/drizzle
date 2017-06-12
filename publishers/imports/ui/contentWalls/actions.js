@@ -14,16 +14,29 @@ const handleCallback = (err ) => {
 };
 
 import {
+  toggleLeadGeneration as toggleLeadGenerationMethod,
+  changePlan as changePlanMethod,
   changeCategory as changeCategoryMethod,
+  toggleMeteredPaywall as toggleMeteredPaywallMethod,
   toggleMicropayment as toggleMicropaymentMethod,
   configExpiration as configExpirationMethod,
   configDonation as configDonationMethod,
   configGuestButtonText as configGuestButtonTextMethod,
+  toggleDailyAccess as toggleDailyAccessMethod,
   toggleUpselling as toggleUpsellingMethod,
 } from '/imports/api/contentWalls/methods';
 
+export const toggleLeadGeneration = ({ wallId, state }) =>
+  toggleLeadGenerationMethod.call({ wallId, state }, handleCallback);
+
 export const toggleMicropayment = ({ wallId, state }) =>
   toggleMicropaymentMethod.call({ wallId, state }, handleCallback);
+
+export const toggleMeteredPaywall = ({ wallId, state }) =>
+  toggleMeteredPaywallMethod.call({ wallId, state }, handleCallback);
+
+export const toggleDailyAccess = ({ wallId, isEnabled }) =>
+  toggleDailyAccessMethod.call({ wallId, isEnabled }, handleCallback);
 
 export const toggleUpselling = ({ wallId, isHidden }) =>
   toggleUpsellingMethod.call({ wallId, isHidden }, handleCallback);
@@ -117,6 +130,25 @@ export function saveImage({ id, file }, callback) {
         callback(err2);
       }
     });
+  });
+}
+
+export function saveVimeoVideoUrl({ id, vimeoVideoUrl }, callback) {
+  if (vimeoVideoUrl && !vimeoVideoUrl.startsWith('https://vimeo.com')) {
+    error('Video is not from vimeo');
+    return;
+  }
+
+  Meteor.call('contentWall/saveVimeoVideoUrl', id, vimeoVideoUrl, (err) => {
+    if (err) {
+      error(err.reason || err);
+    } else {
+      success('Saved');
+    }
+
+    if (callback) {
+      callback(err);
+    }
   });
 }
 
@@ -239,6 +271,20 @@ export function configDonation(
       }
     }
   );
+}
+
+export function changePlan({ wallId, planId }, callback) {
+  changePlanMethod.call({ wallId, planId }, (err) => {
+    if (err) {
+      error(err.reason || err);
+    } else {
+      success('Saved');
+    }
+
+    if (callback) {
+      callback(err);
+    }
+  });
 }
 
 export function changeCategory({ wallId, categoryIds }, callback) {

@@ -5,6 +5,7 @@ import { KeyValues } from 'meteor/drizzle:models';
 import { connect } from 'react-redux';
 import { composeWithTracker, composeAll } from 'react-komposer';
 
+import { getCurrentProduct } from '/imports/products/client/api';
 import { error } from '/imports/notifier';
 import { register, loginWithFacebook } from '../actions';
 
@@ -12,6 +13,7 @@ import Register from '../components/Register';
 
 function composer(props, onData) {
   let benefits;
+  const product = getCurrentProduct();
 
   if (Meteor.subscribe('keyValues/getByKey', 'widgetConfig').ready()) {
     const widgetConfig = KeyValues.findOne({ key: 'widgetConfig' });
@@ -22,20 +24,22 @@ function composer(props, onData) {
 
     onData(null, {
       benefits,
+      showPromoCodeLink: product.isReferralEnabled(),
     });
   }
 }
 
 const mapStateToProps = state => {
-  const { isAuthenticating } = state.user;
+  const { isAuthenticating, promoCode } = state.user;
   return {
     isSubmiting: isAuthenticating,
+    promoCode,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onFacebookClick: () => dispatch(loginWithFacebook()),
-  onSubmit({ target } = event) {
+  onFacebookClick: (event, promoCode) => dispatch(loginWithFacebook(promoCode)),
+  onSubmit({ target } = event, promoCode) {
     const { firstName, lastName, email, password, terms } = target;
 
     if (!terms.checked) {
@@ -50,6 +54,7 @@ const mapDispatchToProps = (dispatch) => ({
       },
       email: email.value.trim(),
       password: password.value.trim(),
+      promoCode,
     }));
   },
 });

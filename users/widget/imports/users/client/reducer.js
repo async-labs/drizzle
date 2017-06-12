@@ -3,6 +3,8 @@ import {
   AUTH_SUCCESS,
   AUTH_ERROR,
   AUTH_CANCELLED,
+  VALIDATE_PROMO_CODE_SUCCESS,
+  VALIDATE_PROMO_CODE_ERROR,
   RECOVER_PASSWORD_REQUEST,
   RECOVER_PASSWORD_SUCCESS,
   RECOVER_PASSWORD_ERROR,
@@ -39,6 +41,18 @@ const userReducer = (state = initialState, { type, ...payload }) => {
         ...state,
         isAuthenticating: false,
         error: payload.error,
+      };
+    case VALIDATE_PROMO_CODE_SUCCESS:
+      return {
+        ...initialState,
+        error: undefined,
+        promoCode: payload.promoCode,
+      };
+    case VALIDATE_PROMO_CODE_ERROR:
+      return {
+        ...initialState,
+        error: payload.error,
+        promoCode: undefined,
       };
     case RECOVER_PASSWORD_REQUEST:
       return {

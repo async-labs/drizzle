@@ -1,7 +1,12 @@
 import React from 'react';
 
+import PlanList from '../containers/PlanList';
+import WeeklySubscriptionToggle from '../containers/WeeklySubscriptionToggle';
 import FreeTrialToggle from '../containers/FreeTrialToggle';
+import ReferralToggle from '../containers/ReferralToggle';
+// import PromoCodeToggle from '../containers/PromoCodeToggle';
 import MonthlySubscriptionToggle from '../containers/MonthlySubscriptionToggle';
+import AnnualSubscriptionToggle from '../containers/AnnualSubscriptionToggle';
 
 const styles = {
   row: {
@@ -26,8 +31,19 @@ export default () => (
         <MonthlySubscriptionToggle />
       </div>
       <div className="col-md-12" style={styles.col}>
+        <WeeklySubscriptionToggle />
+      </div>
+      <div className="col-md-12" style={styles.col}>
+        <AnnualSubscriptionToggle />
+      </div>
+      <div className="col-md-12" style={styles.col}>
         <FreeTrialToggle />
       </div>
+      <div className="col-md-12" style={styles.col}>
+        <ReferralToggle />
+      </div>
     </div>
+
+    <PlanList />
   </div>
 );

@@ -1,11 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 import { getNotPaidUserMessage } from '../util';
+import PromoCode from '/imports/users/client/components/PromoCode';
 
 import {
   PaywallLayout,
   PaywallCallToActionButton,
   Button,
   ContentPlaceholder,
+  PaywallVideoThumbnail,
   RegisterForm,
   LoginForm,
   RecoverPasswordForm,
@@ -52,12 +54,16 @@ class Paywall extends Component {
       user,
       product,
       wall,
+      unlockedCount,
       content,
       paid,
       purchasedCount,
+      alreadySaved,
       widgetConfig,
+      disableMeteredPaywall,
       subscriptionEnabled,
       userSubscribed,
+      showPromoCodeForm,
       showLoginForm,
       showRecoverPasswordForm,
       userStore,
@@ -97,6 +103,12 @@ class Paywall extends Component {
               }
             /> : null}
 
+          {user && !alreadySaved ?
+            <Button
+              label={'Read later'}
+              className={'zenmarket--read-later'}
+            /> : null}
+
           {subscribeButton}
         </div>
       );
@@ -129,14 +141,61 @@ class Paywall extends Component {
                     password: userStore.password,
                   }}
                 />
+              ) : showPromoCodeForm ? (
+                <PromoCode promoCode={userStore.promoCode} />
               ) : (
                 <RegisterForm
+                  showPromoCodeLink={product.isReferralEnabled()}
+                  promoCode={userStore.promoCode}
                   isSubmiting={userStore.isAuthenticating}
                 />
               )}
             </div>
           )}
-          <ContentPlaceholder style={styles.contentPlaceholder} />
+          {wall.isVideo
+            ? <PaywallVideoThumbnail wall={wall} />
+            : <ContentPlaceholder style={styles.contentPlaceholder} />}
+        </div>
+      );
+    }
+
+    // -----------------------------
+    // Paywall for Lead Generation
+    // -----------------------------
+    if (wall.leadGeneration) {
+      return (
+        <div>
+          <p style={styles.message}> By clicking the button bellow, you agree to share your user information on Drizzle with this website. </p>
+          <PaywallCallToActionButton
+            wall={wall}
+            product={product}
+            className={'zenmarket--generate-lead-button'}
+            widgetConfig={widgetConfig}
+          />
+          {wall.isVideo
+            ? <PaywallVideoThumbnail wall={wall} />
+            : <ContentPlaceholder style={styles.contentPlaceholder} />}
+        </div>
+      );
+    }
+
+    // -----------------------------
+    // Paywall for Metered Paywall
+    // -----------------------------
+    if (!disableMeteredPaywall && product.freeArticleCount &&
+        (!unlockedCount || product.freeArticleCount > unlockedCount)) {
+      return (
+        <div>
+          <PaywallCallToActionButton
+            wall={wall}
+            product={product}
+            label={'Yes, unlock for free'}
+            className={'zenmarket--unlock-button'}
+            widgetConfig={widgetConfig}
+          />
+          {wall.isVideo
+            ? <PaywallVideoThumbnail wall={wall} />
+            : <ContentPlaceholder style={styles.contentPlaceholder} />}
         </div>
       );
     }
@@ -152,6 +211,7 @@ class Paywall extends Component {
       wallPrice,
       subscriptionEnabled,
       freeTrial: !!(isFreeTrialEnabled && freeTrialDayCount && !isSubscribedFreeTrial),
+      dailyAccess: product.isDailyAccessEnabled(),
     });
 
     let trialButton = null;
@@ -179,6 +239,37 @@ class Paywall extends Component {
       );
     }
 
+    let dailyAccessButton = null;
+    if (product.isDailyAccessEnabled()) {
+      const { dailyAccessConfig: { price } } = product;
+
+      dailyAccessButton = (
+        <div style={{ width: '100%' }}>
+          <Button
+            label={`Buy daily pass for $${(price / 100).toFixed(2)}`}
+            className={'zenmarket--day-access-button'}
+            style={{ width: '100%', maxWidth: '235px', marginBottom: '10px' }}
+          />
+        </div>
+      );
+    }
+
+    let singlePaymentPlanButton = null;
+    const singlePaymentPlan = wall.getSinglePaymentPlan();
+    if (singlePaymentPlan) {
+      const price = singlePaymentPlan.price / 100;
+
+      singlePaymentPlanButton = (
+        <div style={{ width: '100%' }}>
+          <Button
+            label={`Buy access to "${singlePaymentPlan.name}" for $${price.toFixed(2)}`}
+            className={'zenmarket--buy-plan-button'}
+            style={{ width: '100%', maxWidth: '235px', marginBottom: '10px' }}
+          />
+        </div>
+      );
+    }
+
     let buttons = null;
     if (wall.donationEnabled) {
       buttons = wallPrice ? (
@@ -200,6 +291,15 @@ class Paywall extends Component {
             </div>
           ) : null}
 
+          {singlePaymentPlanButton}
+          {dailyAccessButton}
+
+          {!alreadySaved ?
+            <Button
+              label={'Read later'}
+              className={'zenmarket--read-later'}
+            /> : null}
+
           {trialButton}
           {subscribeButton}
         </div>
@@ -218,18 +318,23 @@ class Paywall extends Component {
           </p>
           : ''}
         {buttons}
-        <ContentPlaceholder style={styles.contentPlaceholder} />
+        {wall.isVideo
+          ? <PaywallVideoThumbnail wall={wall} />
+          : <ContentPlaceholder style={styles.contentPlaceholder} />}
       </div>
     );
   }
 
   render() {
-    const { product, wall, socialProof } = this.props;
+    const { product, wall, unlockedCount, socialProof } = this.props;
+    const remainingFreeCount = product.freeArticleCount - (unlockedCount || 0);
 
     return (
       <PaywallLayout
         wall={wall}
         isClientSide={product.isClientSide || false}
+        isMeteredPaywall={wall.isMeteredPaywall()}
+        remainingFreeCount={remainingFreeCount}
         topLeftMessage={socialProof}
       >
         {this.renderPaywallBody()}
@@ -247,17 +352,21 @@ Paywall.propTypes = {
   user: PropTypes.object,
   product: PropTypes.object.isRequired,
   wall: PropTypes.object.isRequired,
+  unlockedCount: PropTypes.number,
   purchasedCount: PropTypes.number,
   content: PropTypes.string,
   socialProof: PropTypes.string,
   paid: PropTypes.bool.isRequired,
   subscriptionEnabled: PropTypes.bool.isRequired,
   widgetConfig: PropTypes.object.isRequired,
+  alreadySaved: PropTypes.bool.isRequired,
+  disableMeteredPaywall: PropTypes.bool.isRequired,
   userSubscribed: PropTypes.bool.isRequired,
   charge: PropTypes.object,
   showMessage: PropTypes.bool,
   isSigningUp: PropTypes.bool,
 
+  showPromoCodeForm: PropTypes.bool,
   showLoginForm: PropTypes.bool,
   showRecoverPasswordForm: PropTypes.bool,
   userStore: PropTypes.object,

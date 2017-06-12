@@ -4,7 +4,7 @@ import { _ } from 'meteor/underscore';
 import { check } from 'meteor/check';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 
-import { Products, ProductUsers } from 'meteor/drizzle:models';
+import { Products, Plans, ProductUsers } from 'meteor/drizzle:models';
 
 import { buildFilterQuery } from '/imports/api/users/lib/query-builder';
 import { FilterQuerySchema } from '/imports/api/users/lib/shared-schemas';
@@ -67,6 +67,15 @@ Meteor.publish('productUsers.counters', function counters(params) {
 
   Counts.publish(
     this,
+    'productUsers.counters.isBoughtDailyAccess',
+    ProductUsers.find(buildFilterQuery({
+      ...countParams,
+      ...{ filter: { isBoughtDailyAccess: true } },
+    })),
+  );
+
+  Counts.publish(
+    this,
     'productUsers.counters.isUnlockedFreeContent',
     ProductUsers.find(buildFilterQuery({
       ...countParams,
@@ -80,6 +89,24 @@ Meteor.publish('productUsers.counters', function counters(params) {
     ProductUsers.find(buildFilterQuery({
       ...countParams,
       ...{ filter: { isUsedFreeTrial: true } },
+    })),
+  );
+
+  Counts.publish(
+    this,
+    'productUsers.counters.isReferrer',
+    ProductUsers.find(buildFilterQuery({
+      ...countParams,
+      ...{ filter: { filteisReferrer: true } },
+    })),
+  );
+
+  Counts.publish(
+    this,
+    'productUsers.counters.isReferred',
+    ProductUsers.find(buildFilterQuery({
+      ...countParams,
+      ...{ filter: { isReferred: true } },
     })),
   );
 
@@ -144,6 +171,7 @@ Meteor.publish('productUsers.listByProduct', function listByProduct(params) {
 
   return [
     ProductUsers.find(query, options),
+    Plans.find(),
     Meteor.users.find({ _id: { $in: userIds } }, {
       fields: {
         'services.facebook.link': 1,

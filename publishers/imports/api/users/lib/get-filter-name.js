@@ -14,12 +14,24 @@ export function getFilterName(params) {
       name = 'Registered';
     }
 
+    if (params.filter.isReferred) {
+      name = 'Referred';
+    }
+
+    if (params.filter.isReferrer) {
+      name = 'Referrer';
+    }
+
     if (params.filter.isUnlockedFreeContent) {
       name = 'Unlocked Free Content';
     }
 
     if (params.filter.isMicropaid) {
       name = 'Single Payment';
+    }
+
+    if (params.filter.isBoughtDailyAccess) {
+      name = 'Daily Pass';
     }
 
     if (params.filter.isUsedFreeTrial) {

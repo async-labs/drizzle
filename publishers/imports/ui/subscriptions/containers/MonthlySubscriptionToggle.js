@@ -16,7 +16,7 @@ function composer(props, onData) {
 
   return onData(null, {
     toggled: product.subscriptionEnabled,
-    amount: product.subscription && (product.subscription.amount / 100).toFixed(2) || '0',
+    amount: product.subscription && (product.subscription.amount / 100).toFixed(2) || 0,
     stripePlanId: product.subscription && product.subscription.stripePlanId || '',
     onToggle: (toggled) => toggleMonthlySubscription({
       productId: product._id,

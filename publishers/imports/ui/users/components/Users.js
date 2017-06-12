@@ -5,6 +5,7 @@ import Pagination from '../../common/pagination/components/Pagination.jsx';
 
 import ProductUsersTable from './ProductUsersTable';
 import ProductUsersFilterTabs from '../containers/ProductUsersFilterTabs';
+// import Conversions from '../containers/Conversions';
 import SendEmailFormModal from '../components/SendEmailFormModal';
 
 import ProductUsersSearchForm from '../components/ProductUsersSearchForm';
@@ -84,6 +85,7 @@ export default class Users extends Component {
       limit,
       changeOffset,
       ready,
+      handleExportToCSV,
       handleSendEmailToUser,
       isCountersReady,
     } = this.props;
@@ -147,6 +149,12 @@ export default class Users extends Component {
               onClick={::this.sendEmailToUserList}
               style={{ marginRight: 10 }}
             />
+            <Button
+              btnSize={'small'}
+              label={'Export to CSV'}
+              iconRight={<i className="fa fa-download" />}
+              onClick={handleExportToCSV}
+            />
           </div>
           <div className="col-sm-12" style={styles.usersTableContainer}>
             <ProductUsersFilterTabs />
@@ -178,5 +186,6 @@ Users.propTypes = {
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
   changeOffset: PropTypes.func.isRequired,
+  handleExportToCSV: PropTypes.func.isRequired,
   handleSendEmailToUsers: PropTypes.func.isRequired,
 };

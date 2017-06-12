@@ -28,3 +28,4 @@ export { default as DatePickerInput } from './DatePickerInput';
 export { default as ConfigurationToggle } from './ConfigurationToggle';
 export { default as ConfigurationInput } from './ConfigurationInput';
 export { default as ConfigurationBox } from './ConfigurationBox';
+export { default as PaywallVideoThumbnail } from './PaywallVideoThumbnail';

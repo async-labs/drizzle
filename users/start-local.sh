@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd widget/
-MONGO_URL=mongodb://demodb:demodb@ds043366-a0.mlab.com:43366,ds043366-a1.mlab.com:43366/paywall-demo?replicaSet=rs-ds043366 meteor --port 8051 --settings local-settings.json & pid=$!
+MONGO_URL=mongodb://127.0.0.1:27017/zenmarket meteor --port 8051 --settings local-settings.json & pid=$!
 PID_LIST+=" $pid";
 
 
@@ -11,6 +11,9 @@ PID_LIST+=" $pid";
 
 
 cd ../widgetFile/
+python -m SimpleHTTPServer 8070 & pid=$!
+PID_LIST+=" $pid";
+
 gulp & pid=$!
 PID_LIST+=" $pid";
 

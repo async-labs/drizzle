@@ -1,8 +1,11 @@
 import React from 'react';
 
+import MeteredPaywallToggle from '../../products/containers/MeteredPaywallToggle';
+import VimeoForm from '../../vimeo/containers/VimeoForm';
 import ConfigUpsell from '../../upselling/containers/Config';
 import SocialProofToggle from '../../products/containers/SocialProofToggle';
 import SinglePaymentToggle from '../../products/containers/SinglePaymentToggle';
+import DailyAccessToggle from '../../products/containers/DailyAccessToggle';
 import MailchimpForm from '../../mailchimp/containers/MailchimpForm';
 import StripeForm from '../../stripe/containers/StripeForm';
 import ToggleFooterBar from '../../products/containers/ToggleFooterBar';
@@ -31,10 +34,16 @@ const WallSettings = () => (
         <SinglePaymentToggle />
       </div>
       <div className="col-md-12" style={styles.col}>
+        <DailyAccessToggle />
+      </div>
+      <div className="col-md-12" style={styles.col}>
         <SocialProofToggle />
       </div>
       <div className="col-md-12" style={styles.col}>
         <ConfigUpsell />
+      </div>
+      <div className="col-md-12" style={styles.col}>
+        <MeteredPaywallToggle />
       </div>
       <div className="col-md-12" style={styles.col}>
         <ToggleFooterBar />
@@ -44,6 +53,9 @@ const WallSettings = () => (
       </div>
       <div className="col-md-12" style={styles.col}>
         <StripeForm />
+      </div>
+      <div className="col-md-12" style={styles.col}>
+        <VimeoForm />
       </div>
     </div>
   </div>

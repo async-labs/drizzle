@@ -1,6 +1,7 @@
 import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
 import { ServiceConfiguration } from 'meteor/service-configuration';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { get } from '/imports/products/client/currentUrl';
 import { getCurrentWall, getCurrentProduct } from '/imports/products/client/api';
@@ -35,6 +36,22 @@ export const AUTH_CANCELLED = 'AUTH_CANCELLED';
 export function authUserCancelled() {
   return {
     type: AUTH_CANCELLED,
+  };
+}
+
+export const VALIDATE_PROMO_CODE_SUCCESS = 'VALIDATE_PROMO_CODE_SUCCESS';
+export function validatePromoCodeSuccess(promoCode) {
+  return {
+    type: VALIDATE_PROMO_CODE_SUCCESS,
+    promoCode,
+  };
+}
+
+export const VALIDATE_PROMO_CODE_ERROR = 'VALIDATE_PROMO_CODE_ERROR';
+export function validatePromoCodeError(err) {
+  return {
+    type: VALIDATE_PROMO_CODE_ERROR,
+    error: err,
   };
 }
 
@@ -76,7 +93,24 @@ export const login = ({ email, password }) => dispatch => {
   });
 };
 
-export const register = ({ profile, email, password }) => dispatch => {
+export const addPromoCode = (promoCode) => dispatch => {
+  // dispatch(validatePromoRequest(promoCode));
+  Meteor.call('referral.validatePromoCode', { promoCode }, err => {
+    if (err) {
+      dispatch(validatePromoCodeError(err));
+      error(err);
+      return;
+    }
+
+    dispatch(validatePromoCodeSuccess(promoCode));
+
+    success('You successfully added a promo code!');
+    FlowRouter.go('/register');
+  });
+};
+
+
+export const register = ({ profile, email, password, promoCode }) => dispatch => {
   const options = {
     profile, email, password,
   };
@@ -96,6 +130,7 @@ export const register = ({ profile, email, password }) => dispatch => {
       url: get(),
       productId: product._id,
       wallId: wall && wall._id,
+      promoCode: promoCode || '',
     });
 
     dispatch(authUserSuccess());
@@ -103,7 +138,7 @@ export const register = ({ profile, email, password }) => dispatch => {
 };
 
 
-export const loginWithFacebook = () => dispatch => {
+export const loginWithFacebook = (promoCode = '') => dispatch => {
   dispatch(authUserRequest());
   const options = {
   };
@@ -117,6 +152,7 @@ export const loginWithFacebook = () => dispatch => {
         url: get(),
         productId: product._id,
         wallId: wall && wall._id,
+        promoCode: promoCode || '',
       });
 
       dispatch(authUserSuccess());

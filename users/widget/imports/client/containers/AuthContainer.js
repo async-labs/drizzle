@@ -7,6 +7,7 @@ function composer(props, onData) {
     '/login',
     '/register',
     '/recover-password',
+    '/promo-code',
   ].indexOf(FlowRouter.current().path) !== -1;
 
   if (Meteor.loggingIn()) {

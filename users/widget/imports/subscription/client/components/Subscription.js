@@ -1,13 +1,27 @@
 import React, { PropTypes, Component } from 'react';
 import moment from 'moment';
 
+import Plans from '../containers/Plans';
 import FreeTrial from '../containers/FreeTrial';
+import Annual from '../containers/Annual';
 import Monthly from '../containers/Monthly';
+import Weekly from '../containers/Weekly';
+import DiscountForm from '../containers/DiscountForm';
 
 class Subscription extends Component {
+  renderDiscountForm() {
+    const {
+      hasActiveDiscount,
+    } = this.props;
+
+    if (!hasActiveDiscount) { return null; }
+    return <DiscountForm />;
+  }
 
   renderMain() {
     const {
+      plan,
+
       currentSubscription,
       trialSubscription,
       isSubscribedFreeTrial,
@@ -15,12 +29,23 @@ class Subscription extends Component {
       isFreeTrialEnabled,
       isPaid,
 
+      annualEnabled,
       monthlyEnabled,
+      weeklyEnabled,
 
+      annualSubscribed,
+      changeAnnualSubscribed,
       monthlySubscribed,
       changeMonthlySubscribed,
+      weeklySubscribed,
+      changeWeeklySubscribed,
 
+      annualInProgress,
+      changeAnnualInProgress,
+      monthlyInProgress,
       changeMonthlyInProgress,
+      weeklyInProgress,
+      changeWeeklyInProgress,
     } = this.props;
 
     if ((isFreeTrialEnabled && freeTrialDayCount && !currentSubscription &&
@@ -32,18 +57,36 @@ class Subscription extends Component {
     if (!trialSubscription) {
       subComp = (
         <div>
+          {this.renderDiscountForm()}
+
           <p> Choose a subscription plan: </p>
           <hr style={{ marginTop: 0 }} />
 
-          {monthlyEnabled ?
+          {weeklyEnabled && !monthlyInProgress && !annualInProgress ?
+            <Weekly
+              subscribed={weeklySubscribed}
+              changeSubscribed={changeWeeklySubscribed}
+              changeInProgress={changeWeeklyInProgress}
+            /> : null}
+
+          {monthlyEnabled && !weeklyInProgress && !annualInProgress ?
             <Monthly
               subscribed={monthlySubscribed}
               changeSubscribed={changeMonthlySubscribed}
               changeInProgress={changeMonthlyInProgress}
             /> : null}
 
+          {annualEnabled && !weeklyInProgress && !monthlyInProgress ?
+            <Annual
+              subscribed={annualSubscribed}
+              changeSubscribed={changeAnnualSubscribed}
+              changeInProgress={changeAnnualInProgress}
+            /> : null}
+
+          {plan && !annualSubscribed && !monthlySubscribed && !weeklySubscribed ? <Plans /> : null}
+
           <ul className="fs12" style={{ listStyle: 'disc !important', marginTop: '10px' }}>
-            {currentSubscription && monthlySubscribed ?
+            {currentSubscription && (annualSubscribed || monthlySubscribed || weeklySubscribed) ?
               <li>
                 Your next payment is on {moment(currentSubscription.endAt).add(1, 'day').format('MMM DD YYYY')}.
               </li> : null}
@@ -61,11 +104,14 @@ class Subscription extends Component {
   render() {
     const {
       product,
+      plan,
+      annualEnabled,
       monthlyEnabled,
+      weeklyEnabled,
       isOwner,
     } = this.props;
 
-    if (!monthlyEnabled) {
+    if (!annualEnabled && !monthlyEnabled && !weeklyEnabled && !plan) {
       return (
         <div>
           <p className="margin-10">Available subscriptions for {product.domain}</p>
@@ -95,7 +141,10 @@ class Subscription extends Component {
 Subscription.propTypes = {
   product: PropTypes.object.isRequired,
   isOwner: PropTypes.bool.isRequired,
+  annualEnabled: PropTypes.bool.isRequired,
   monthlyEnabled: PropTypes.bool.isRequired,
+  weeklyEnabled: PropTypes.bool.isRequired,
+  plan: PropTypes.object,
 
   currentSubscription: PropTypes.object,
   trialSubscription: PropTypes.object,
@@ -104,10 +153,24 @@ Subscription.propTypes = {
   isPaid: PropTypes.bool,
   freeTrialDayCount: PropTypes.number,
 
+  hasActiveDiscount: PropTypes.bool,
+
+  annualSubscribed: PropTypes.bool.isRequired,
+  changeAnnualSubscribed: PropTypes.func.isRequired,
   monthlySubscribed: PropTypes.bool.isRequired,
   changeMonthlySubscribed: PropTypes.func.isRequired,
+  weeklySubscribed: PropTypes.bool.isRequired,
+  changeWeeklySubscribed: PropTypes.func.isRequired,
 
+  annualInProgress: PropTypes.bool.isRequired,
+  changeAnnualInProgress: PropTypes.func.isRequired,
+  monthlyInProgress: PropTypes.bool.isRequired,
   changeMonthlyInProgress: PropTypes.func.isRequired,
+  weeklyInProgress: PropTypes.bool.isRequired,
+  changeWeeklyInProgress: PropTypes.func.isRequired,
 };
 
 export default Subscription;
+
+/* <p> Weekly <Button label={'Subscribe'} style={{ fontSize: 14, padding: '5px 15px', float: 'right' }} /> </p>
+<p> Monthly <Button label={'Subscribe'} style={{ fontSize: 14, padding: '5px 15px', float: 'right' }} /> </p> */

@@ -23,6 +23,7 @@ Meteor.publish('contentWalls/listByProduct', function listByProduct(params) {
       subscribedUserCount: Match.Optional(Number), // eslint-disable-line new-cap
       visitedCountViaUpselling: Match.Optional(Number), // eslint-disable-line new-cap
       subscriberVisitedCount: Match.Optional(Number), // eslint-disable-line new-cap
+      dailyAccessSoldCount: Match.Optional(Number), // eslint-disable-line new-cap
     },
   });
 
@@ -60,12 +61,13 @@ Meteor.publish('contentWalls/listByProduct', function listByProduct(params) {
       totalIncome: 1, content: 1, price: 1, disabled: 1, viewCount: 1,
       isEncryptedContentIntalled: 1, cpm: 1, isActive: 1, uniqueViewCount: 1,
       fixedPricing: 1, popularity: 1, autoDecryptionConfig: 1, title: 1, isVideo: 1,
-      expirationHours: 1, donationMessage: 1, donationThankYouMessage: 1,
+      leadGeneration: 1, subscriptionPlanIds: 1,
+      disableMeteredPaywall: 1, expirationHours: 1, donationMessage: 1, donationThankYouMessage: 1,
       donationEnabled: 1, expirationEnabled: 1,
       sharedCounts: 1, disableMicropayment: 1, guestButtonText: 1, categoryIds: 1,
       callToActionClickedCount: 1, registeredUserCount: 1, subscribedUserCount: 1,
-      freeTrialSubscribedUserCount: 1, visitedCountViaUpselling: 1,
-      hideUpsellingList: 1, subscriberVisitedCount: 1,
+      freeTrialSubscribedUserCount: 1, isDailyAccessEnabled: 1, visitedCountViaUpselling: 1,
+      hideUpsellingList: 1, dailyAccessSoldCount: 1, subscriberVisitedCount: 1,
       footerButtonClickedCount: 1,
     },
   };
@@ -100,12 +102,13 @@ Meteor.publish('contentWalls/getById', function getById(id) {
       totalIncome: 1, content: 1, price: 1, disabled: 1, viewCount: 1,
       isEncryptedContentIntalled: 1, cpm: 1, isActive: 1, uniqueViewCount: 1,
       fixedPricing: 1, popularity: 1, autoDecryptionConfig: 1, title: 1, isVideo: 1,
-      expirationHours: 1, donationMessage: 1, donationThankYouMessage: 1,
+      leadGeneration: 1, subscriptionPlanIds: 1,
+      disableMeteredPaywall: 1, expirationHours: 1, donationMessage: 1, donationThankYouMessage: 1,
       donationEnabled: 1, expirationEnabled: 1, categoryIds: 1,
       sharedCounts: 1, disableMicropayment: 1, guestButtonText: 1, viewportConfig: 1,
       callToActionClickedCount: 1, registeredUserCount: 1, subscribedUserCount: 1,
-      freeTrialSubscribedUserCount: 1, visitedCountViaUpselling: 1,
-      hideUpsellingList: 1, subscriberVisitedCount: 1,
+      freeTrialSubscribedUserCount: 1, isDailyAccessEnabled: 1, visitedCountViaUpselling: 1,
+      hideUpsellingList: 1, dailyAccessSoldCount: 1, subscriberVisitedCount: 1,
       footerButtonClickedCount: 1,
     },
   };

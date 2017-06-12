@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import moment from 'moment';
 import { WidgetSubscriptionPlan, Button } from '/imports/ui/components';
-import { subscribeMonthly, unsubscribeMonthly } from '../actions';
+import { toggleSubscribe } from '../actions';
 import SubscribedMessage from './SubscribedMessage';
 import ConfirmationButton from './ConfirmationButton';
 
@@ -14,15 +14,16 @@ class Monthly extends Component {
       showConfirmationButtons: false,
     };
   }
-
   unsubscribe() {
     const { product, wall, changeSubscribed } = this.props;
 
     this.toggleConfirmationButton();
     changeSubscribed(false);
 
-    unsubscribeMonthly({
+    toggleSubscribe({
       productId: product._id,
+      monthly: true,
+      subscribe: false,
       wallId: wall && wall._id,
     }, (err) => {
       if (err) {
@@ -37,8 +38,10 @@ class Monthly extends Component {
     this.toggleConfirmationButton();
     changeSubscribed(true);
 
-    subscribeMonthly({
+    toggleSubscribe({
       productId: product._id,
+      monthly: true,
+      subscribe: true,
       wallId: wall && wall._id,
     }, (err) => {
       if (err) {

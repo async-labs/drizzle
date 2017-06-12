@@ -9,6 +9,7 @@ import { currentProduct } from '../../products/currentProduct';
 import { ProductUsers } from 'meteor/drizzle:models';
 
 import Users from '../components/Users';
+import { exportUsersToCSV } from '../actions';
 import { success, error } from '/imports/ui/notifier';
 
 const DUMMY_USER = {
@@ -21,23 +22,33 @@ const DUMMY_USER = {
   freeTrialBeginAt: new Date('Sat Nov 19 2016 11:49:45'),
   freeTrialEndAt: new Date('Sat Nov 19 2016 11:49:50'),
   isMicropaid: false,
+  isBoughtDailyAccess: true,
+  isReferred: true,
   isRegisteredAtIt: true,
   isSubscribed: true,
   isUnlockedFreeContent: false,
   isUnsubscribed: true,
+  isWeeklySubscribed: false,
+  isWeeklyUnsubscribed: false,
   lastName: 'User',
+  leadGeneration: false,
   name: 'Demo User',
   productDomain: 'localhost:8060',
   productId: 'phMTk7ZH8aLt6CM9y',
   productTitle: 'Example',
+  promoCode: 'fW2s8qY2',
   registeredAt: 'http://localhost:8060/',
   totalSpent: 1200,
   totalUnlockedCount: 2,
+  usedPromoCode: 'FbH927rG',
   userId: '5JN5n37iFtwmkRDi6',
   user() {
     return {
       isEmailVerified: () => false,
     };
+  },
+  plan() {
+    return null;
   },
   getFullName() {
     return 'Demo User';
@@ -102,6 +113,9 @@ function composer(props, onData) {
     changeOffset,
     ready,
     totalCount: Counts.get('productUsers.listByProduct.count'),
+    handleExportToCSV: () => {
+      exportUsersToCSV(params);
+    },
     handleSendEmailToUsers: (event) => {
       event.preventDefault();
       const { body, subject } = event.target;

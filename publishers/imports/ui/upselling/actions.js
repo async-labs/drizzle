@@ -5,6 +5,7 @@ import {
   configUpsellingItemCountToShow,
   configUpsellingPurchasedCount,
   configUpsellingUpvoteCount,
+  configUpsellingUserCount,
 } from '/imports/api/products/methods';
 
 export function toggle({ productId, type, state }, callback) {
@@ -51,6 +52,20 @@ export function savePurchasedCount({ productId, count }, callback) {
 
 export function saveUpvoteCount({ productId, count }, callback) {
   configUpsellingUpvoteCount.call({ productId, count }, err => {
+    if (err) {
+      error(err);
+    } else {
+      success('Saved.');
+    }
+
+    if (callback) {
+      callback(err);
+    }
+  });
+}
+
+export function saveUserCount({ productId, count }, callback) {
+  configUpsellingUserCount.call({ productId, count }, err => {
     if (err) {
       error(err);
     } else {

@@ -17,6 +17,7 @@ const UpsellingConfig = ({
   onChangeUpsellingCount,
   onChangePurchasedCount,
   onChangeUpvoteCount,
+  onChangeUserCount,
   upsellingConfig,
 }) => (
   <ConfigurationBox
@@ -29,6 +30,21 @@ const UpsellingConfig = ({
       onToggle={toggled => onToggle({ toggled, type: 'popular' })}
       toggled={upsellingConfig.popular}
       nameStyle={styles.toggleName}
+    />
+
+    <ConfigurationToggle
+      name="Trending Content"
+      onToggle={toggled => onToggle({ toggled, type: 'trending' })}
+      toggled={upsellingConfig.trending}
+      nameStyle={styles.toggleName}
+    />
+
+    <ConfigurationToggle
+      name="Similar Content"
+      onToggle={toggled => onToggle({ toggled, type: 'related' })}
+      toggled={upsellingConfig.related}
+      nameStyle={styles.toggleName}
+
     />
 
     <ConfigurationToggle
@@ -62,7 +78,7 @@ const UpsellingConfig = ({
     />
 
     <ConfigurationInput
-      name="Purchased count threshold (for Popular)"
+      name="Purchased count threshold (for Treding & Popular)"
       inputName={'purchasedCount'}
       isForm={false}
       value={upsellingConfig.purchasedCount}
@@ -72,12 +88,22 @@ const UpsellingConfig = ({
     />
 
     <ConfigurationInput
-      name="Upvote count threshold (for Popular)"
+      name="Upvote count threshold (for Treding & Popular)"
       inputName={'upvoteCount'}
       isForm={false}
       value={upsellingConfig.upvoteCount}
       onChange={event => {
         onChangeUpvoteCount(event.target.value);
+      }}
+    />
+
+    <ConfigurationInput
+      name="User count threshold (for Similar)"
+      inputName={'userCount'}
+      isForm={false}
+      value={upsellingConfig.userCount}
+      onChange={event => {
+        onChangeUserCount(event.target.value);
       }}
     />
 
@@ -89,6 +115,7 @@ UpsellingConfig.propTypes = {
   onChangeUpsellingCount: PropTypes.func.isRequired,
   onChangePurchasedCount: PropTypes.func.isRequired,
   onChangeUpvoteCount: PropTypes.func.isRequired,
+  onChangeUserCount: PropTypes.func.isRequired,
   upsellingConfig: PropTypes.object,
 };
 

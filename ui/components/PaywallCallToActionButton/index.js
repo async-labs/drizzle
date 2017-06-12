@@ -12,6 +12,8 @@ export const callToActionText = (product, wall) => {
     return wall.donationMessage
     ? `${wall.donationMessage}${wallPrice && ` $${wallPrice.toFixed(2)}` || ''}`
     : `Donate${wallPrice && ` $${wallPrice.toFixed(2)}` || ''}`;
+  } else if (wall.isVideo) {
+    return 'View Video';
   }
 
   return wall.guestButtonText || 'Read more';
@@ -38,6 +40,7 @@ PaywallCallToActionButton.propTypes = {
   }).isRequired,
   wall: PropTypes.shape({
     donationEnabled: PropTypes.bool,
+    isVideo: PropTypes.bool,
     disableMicropayment: PropTypes.bool,
     price: PropTypes.number,
   }).isRequired,

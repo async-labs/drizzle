@@ -8,3 +8,6 @@ import '../imports/contentWalls/server';
 import '../imports/keyValues/server/publications';
 
 import '../imports/mailchimp/server';
+import '../imports/savedWalls/server';
+import '../imports/referral/server';
+import '../imports/dailyAccess/server';

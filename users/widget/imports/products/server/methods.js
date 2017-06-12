@@ -8,6 +8,7 @@ import {
   ProductUsers,
   ContentWalls,
   ContentWallCharges,
+  DailyAccessCharges,
 } from 'meteor/drizzle:models';
 
 import { getScore } from 'meteor/drizzle:util';
@@ -16,7 +17,9 @@ import { subscriberVisitedWall } from '../../subscription/server';
 import {
   chargePAYG as charge,
   unlock as unlockFn,
+  generateLead as generateLeadFn,
 } from './index';
+import chargeSinglePaymentPlan from './chargeSinglePaymentPlan';
 
 export const chargePAYG = new ValidatedMethod({
   name: 'products.chargePAYG',
@@ -47,6 +50,45 @@ export const chargePAYG = new ValidatedMethod({
     }
 
     return charge({ user, vendor, product, wall });
+  },
+});
+
+export const buyPlan = new ValidatedMethod({
+  name: 'products.buyPlan',
+
+  validate: new SimpleSchema({
+    wallId: { type: String },
+    planId: { type: String },
+  }).validator(),
+
+  run({ wallId, planId }) {
+    if (!this.userId) {
+      throw new Meteor.Error('login-required', 'Login is required');
+    }
+
+    const wall = ContentWalls.findOne(wallId);
+
+    if (!wall) {
+      throw new Meteor.Error('invalid-data', 'Paywall is not enabled.');
+    }
+
+    const plan = wall.getSinglePaymentPlan();
+    if (!plan || plan._id !== planId) {
+      throw new Meteor.Error('invalid-data', 'Wrong plan');
+    }
+
+    const user = Meteor.users.findOne(this.userId);
+    const product = Products.findOne(wall.productId);
+    if (!product || !product.vendorUserId) {
+      throw new Meteor.Error('invalid-data', 'Website is not found!');
+    }
+
+    const vendor = Meteor.users.findOne(product.vendorUserId);
+    if (!vendor) {
+      throw new Meteor.Error('invalid-data', 'Website owner is not found!');
+    }
+
+    return chargeSinglePaymentPlan({ user, vendor, product, wall, plan });
   },
 });
 
@@ -91,6 +133,38 @@ export const unlock = new ValidatedMethod({
     }
 
     return unlockFn({ user, vendor, product, wall });
+  },
+});
+
+export const generateLead = new ValidatedMethod({
+  name: 'products.generateLead',
+
+  validate: new SimpleSchema({
+    wallId: { type: String },
+  }).validator(),
+
+  run({ wallId }) {
+    const wall = ContentWalls.findOne(wallId);
+    if (!wall) {
+      throw new Meteor.Error('invalid-data', 'Paywall is not enabled.');
+    }
+
+    if (!this.userId) {
+      throw new Meteor.Error('login-required', 'Login is required');
+    }
+
+    const user = Meteor.users.findOne(this.userId);
+    const product = Products.findOne(wall.productId);
+    if (!product || !product.vendorUserId) {
+      throw new Meteor.Error('invalid-data', 'Website is not found!');
+    }
+
+    const vendor = Meteor.users.findOne(product.vendorUserId);
+    if (!vendor) {
+      throw new Meteor.Error('invalid-data', 'Website owner is not found!');
+    }
+
+    return generateLeadFn({ user, vendor, product, wall });
   },
 });
 
@@ -254,6 +328,7 @@ export const getWallContent = new ValidatedMethod({
     const subscription = Subscriptions.findOne({
       userId: this.userId,
       productId: product._id,
+      planId: { $exists: false },
       beginAt: { $lte: now },
       endAt: { $gte: now },
     }, {
@@ -266,6 +341,61 @@ export const getWallContent = new ValidatedMethod({
     if (subscription) {
       subscriberVisitedWall({ userId: this.userId, wall });
       return sendContent(this.connection, wall, product);
+    }
+
+    const planId = wall.subscriptionPlanIds && wall.subscriptionPlanIds[0];
+
+    if (planId) {
+      const planSubscription = Subscriptions.findOne({
+        userId: this.userId,
+        productId: product._id,
+        planId,
+        beginAt: { $lte: now },
+        endAt: { $gte: now },
+      }, {
+        fields: { _id: 1 },
+      });
+
+      /**
+       * Found the subscription -> send content.
+       */
+      if (planSubscription) {
+        subscriberVisitedWall({ userId: this.userId, wall });
+        return sendContent(this.connection, wall, product);
+      }
+    }
+
+    const dailyAccessCharge = DailyAccessCharges.findOne({
+      userId: this.userId,
+      productId: product._id,
+      beginAt: { $lte: now },
+      endAt: { $gte: now },
+    }, {
+      fields: { _id: 1 },
+    });
+
+    /**
+     * Found the daily access charge -> send content.
+     */
+    if (dailyAccessCharge) {
+      return sendContent(this.connection, wall, product);
+    }
+
+    const singlePaymentPlan = wall.getSinglePaymentPlan();
+    if (singlePaymentPlan) {
+      const planPayment = ContentWallCharges.findOne({
+        planId: singlePaymentPlan._id,
+        userId: this.userId,
+      }, {
+        fields: { _id: 1 },
+      });
+
+      /**
+       * Found a charge -> send content.
+       */
+      if (planPayment) {
+        return sendContent(this.connection, wall, product);
+      }
     }
 
     /**
@@ -326,7 +456,30 @@ export const upvote = new ValidatedMethod({
       { userId: this.userId, productId: wall.productId,
         beginAt: { $lte: now }, endAt: { $gte: now } });
 
-    const paid = !!ch || !!subscription;
+    let paid = !!ch || !!subscription;
+
+    if (!paid) {
+      paid = !!DailyAccessCharges.findOne({
+        userId: this.userId,
+        productId: wall.productId,
+        beginAt: { $lte: now },
+        endAt: { $gte: now },
+      }, {
+        fields: { _id: 1 },
+      });
+    }
+
+    if (!paid) {
+      const singlePaymentPlan = wall.getSinglePaymentPlan();
+      if (singlePaymentPlan) {
+        paid = !!ContentWallCharges.findOne({
+          planId: singlePaymentPlan._id,
+          userId: this.userId,
+        }, {
+          fields: { _id: 1 },
+        });
+      }
+    }
 
     if (!paid) {
       throw new Meteor.Error('invalid-data', 'Pay or unlock in order to upvote');

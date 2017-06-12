@@ -3,11 +3,13 @@ import { parse } from 'url';
 import cheerio from 'cheerio';
 
 import { check, Match } from 'meteor/check';
+import { _ } from 'meteor/underscore';
 
 import { Picker } from 'meteor/meteorhacks:picker';
 
 import {
   Products,
+  Plans,
   ContentWalls,
   WpPluginWebsites,
 } from 'meteor/drizzle:models';
@@ -122,6 +124,7 @@ function createOrUpdateWallPerContent({
   fullUrl,
   title,
   content,
+  leadGeneration,
   disabled,
   url,
   embedlyData,
@@ -152,6 +155,7 @@ function createOrUpdateWallPerContent({
       score: getScore(0, createdAt),
       content: { original: content },
 
+      leadGeneration: !!leadGeneration,
       disabled: !!disabled,
     };
 
@@ -187,6 +191,7 @@ function createOrUpdateWallPerContent({
       original: content,
     },
 
+    leadGeneration: !!leadGeneration,
     disabled: !!disabled,
   };
 
@@ -210,6 +215,7 @@ function createOrUpdateWall({
   key,
   title,
   id,
+  leadGeneration,
   disabled,
 }) {
   const product = validateKeyAndGetProduct({ key, blog: url });
@@ -223,6 +229,7 @@ function createOrUpdateWall({
     check(title, String);
     check(id, Match.Maybe(String)); // eslint-disable-line new-cap
 
+    check(leadGeneration, Match.Maybe(String)); // eslint-disable-line new-cap
     check(disabled, Match.Maybe(String)); // eslint-disable-line new-cap
   } catch (e) {
     return false;
@@ -253,6 +260,7 @@ function createOrUpdateWall({
       fullUrl,
       title,
       content,
+      leadGeneration,
       disabled,
       url,
       embedlyData,
@@ -269,6 +277,7 @@ function createOrUpdateWall({
     fullUrl,
     title,
     content: content[0],
+    leadGeneration,
     disabled,
     url,
     embedlyData,
@@ -283,12 +292,38 @@ function createOrUpdateWall({
       fullUrl: `${fullUrl}?page=${i + 1}`,
       title: `${title}-Page ${i + 1}`,
       content: c,
+      leadGeneration,
       disabled,
       url: `${url}?page=${i + 1}`,
     });
   });
 
   return true;
+}
+
+
+function getPlans({ url, key }) {
+  const product = validateKeyAndGetProduct({ key, blog: url });
+  if (!product) {
+    return false;
+  }
+
+  return Plans.find({ productId: product._id }).fetch();
+}
+
+
+function getWalls({ url, key, filter }) {
+  const product = validateKeyAndGetProduct({ key, blog: url });
+  if (!product) {
+    return false;
+  }
+
+  const f = _.extend({ productId: product._id }, filter);
+
+  return ContentWalls.find(
+    f,
+    { fields: { url: 1, subscriptionPlanIds: 1, externalId: 1 } }
+  ).fetch();
 }
 
 const apiRoutes = Picker.filter((req) => req.method === 'POST');
@@ -347,6 +382,7 @@ apiRoutes.route(`${API_PATH}change-walltype`, (params, req, res) => {
     key,
     url,
     id,
+    leadGeneration,
     disabled,
   } = req.body;
 
@@ -360,6 +396,7 @@ apiRoutes.route(`${API_PATH}change-walltype`, (params, req, res) => {
     check(url, Match.Maybe(String)); // eslint-disable-line
     check(id, Match.Maybe(String)); // eslint-disable-line
 
+    check(leadGeneration, Match.Maybe(String)); // eslint-disable-line new-cap
     check(disabled, Match.Maybe(String)); // eslint-disable-line new-cap
   } catch (e) {
     return res.end(JSON.stringify({ status: 'invalid', error: 'Invalid data' }));
@@ -383,6 +420,7 @@ apiRoutes.route(`${API_PATH}change-walltype`, (params, req, res) => {
   }
 
   const modifier = {
+    leadGeneration: !!leadGeneration,
     disabled: !!disabled,
   };
 
@@ -393,6 +431,121 @@ apiRoutes.route(`${API_PATH}change-walltype`, (params, req, res) => {
   ContentWalls.update(wall._id, { $set: modifier });
 
   return res.end(JSON.stringify({ status: 'valid' }));
+});
+
+
+apiRoutes.route(`${API_PATH}get-plans`, (params, req, res) => {
+  const result = { status: 'invalid' };
+
+  const plans = getPlans(req.body);
+  if (plans) {
+    result.status = 'valid';
+    result.plans = plans;
+  }
+  return res.end(JSON.stringify(result));
+});
+
+
+apiRoutes.route(`${API_PATH}set-plan`, (params, req, res) => {
+  if (!req.body) {
+    return res.end(JSON.stringify({ status: 'invalid', error: 'Body is missing' }));
+  }
+
+  const { key, url, planId, id } = req.body;
+
+  const product = validateKeyAndGetProduct({ key, blog: url });
+
+  if (!product) {
+    return res.end(JSON.stringify({ status: 'invalid', error: 'Invalid data' }));
+  }
+
+  try {
+    check(planId, String);
+    check(url, Match.Maybe(String)); // eslint-disable-line
+    check(id, Match.Maybe(String)); // eslint-disable-line
+  } catch (e) {
+    return res.end(JSON.stringify({ status: 'invalid', error: 'Invalid data' }));
+  }
+
+  let wall;
+
+  if (id) {
+    wall = ContentWalls.findOne({ productId: product._id, externalId: id });
+  }
+
+  if (!wall && url) {
+    const path = getPath(url);
+    const fullUrl = `${parse(url).host}${path}`;
+
+    wall = ContentWalls.findOne({ url: fullUrl });
+  }
+
+  if (!wall) {
+    return res.end(JSON.stringify({ status: 'invalid', error: 'Wall not found' }));
+  }
+
+  const modifier = {};
+  if (id) {
+    modifier.externalId = id;
+  }
+
+  if (planId === '') {
+    modifier.subscriptionPlanIds = [];
+  } else {
+    const plan = Plans.findOne(planId);
+    if (!plan) {
+      return res.end(JSON.stringify({ status: 'invalid', error: 'Plan not found' }));
+    }
+    modifier.subscriptionPlanIds = [plan._id];
+  }
+
+  ContentWalls.update(wall._id, { $set: modifier });
+
+  return res.end(JSON.stringify({ status: 'valid' }));
+});
+
+
+apiRoutes.route(`${API_PATH}get-walls`, (params, req, res) => {
+  if (!req.body) {
+    return res.end(JSON.stringify({ status: 'invalid', error: 'Body is missing' }));
+  }
+
+  const { key, url } = req.body;
+
+  const plans = getPlans(req.body);
+  let walls = getWalls({ key, url, filter: { subscriptionPlanIds: { $exists: true } } });
+
+  if (!plans || !walls) {
+    return res.end(JSON.stringify({ status: 'invalid', error: 'Invalid data' }));
+  }
+
+  const planNames = {};
+  plans.forEach(plan => {
+    planNames[plan._id] = plan.name;
+  });
+
+  walls = _.filter(walls.map(wall => {
+    if (!wall.subscriptionPlanIds || wall.subscriptionPlanIds.length === 0) {
+      return null;
+    }
+
+    const planId = wall.subscriptionPlanIds[0];
+    if (!planId) {
+      return null;
+    }
+
+    const planName = planNames[planId];
+    if (!planName) {
+      return null;
+    }
+
+    const obj = _.extend({ planName }, _.pick(wall, 'url', '_id'));
+    obj.externalId = wall.externalId || wall.url;
+
+    return obj;
+  }), w => w);
+
+  return res.end(JSON.stringify({ status: 'valid', walls }));
 });
 
 

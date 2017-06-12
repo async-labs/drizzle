@@ -75,5 +75,5 @@ Meteor.publish('myProductById', function myProductById(id) {
     filter.vendorUserId = this.userId;
   }
 
-  return Products.find(filter, { fields: { ispAPI: 0 } });
+  return Products.find(filter, { fields: { ispAPI: 0, 'vimeoToken.accessToken': 0 } });
 });

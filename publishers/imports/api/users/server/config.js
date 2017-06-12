@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 
 Accounts.urls.verifyEmail = (token) => Meteor.absoluteUrl(`auth/verify/${token}`);
+
 Accounts.urls.resetPassword = (token) => Meteor.absoluteUrl(`auth/recover-password/${token}`);
 
 

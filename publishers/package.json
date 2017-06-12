@@ -37,6 +37,8 @@
     "react-mounter": "^1.2.0",
     "react-notification-system": "^0.2.7",
     "react-toggle": "^2.1.1",
-    "stripe": "^4.5.0"
+    "stripe": "^4.5.0",
+    "vimeo": "^1.2.0",
+    "whatwg-fetch": "^2.0.3"
   }
 }

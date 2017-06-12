@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import SubscribeButton from '../../../subscription/client/containers/SubscribeButton.jsx';
+import ReferralButton from '/imports/referral/client/containers/ReferralButton';
 import moment from 'moment';
 import ReactTooltip from 'react-tooltip';
 
@@ -74,6 +75,9 @@ const Wallet = ({ amount, product, walletBalance, depositBalance, isOwner }) => 
       <hr style={{ marginTop: '20px', marginBottom: '8px' }} />
 
       <SubscribeButton />
+      {!isOwner && (
+        <ReferralButton />
+      )}
       <ReactTooltip />
     </div>
   );

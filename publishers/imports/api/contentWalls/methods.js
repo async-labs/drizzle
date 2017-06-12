@@ -5,9 +5,60 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { checkOwnerAndSetup } from 'meteor/drizzle:check-functions';
 import {
   Products,
+  Plans,
   ContentWalls,
   Categories,
 } from 'meteor/drizzle:models';
+
+export const toggleLeadGeneration = new ValidatedMethod({
+  name: 'contentWalls.toggleLeadGeneration',
+  validate({ wallId, state }) {
+    check(wallId, String);
+    check(state, Boolean);
+  },
+
+  run({ wallId, state }) {
+    const wall = ContentWalls.findOne(wallId);
+    if (!wall) {
+      throw new Meteor.Error('invalid-data', 'Invalid data');
+    }
+
+    const product = Products.findOne(wall.productId);
+    checkOwnerAndSetup({ product, user: Meteor.user() });
+
+    if (state) {
+      ContentWalls.update(wallId, { $set: {
+        leadGeneration: true,
+      } });
+    } else {
+      ContentWalls.update(wallId, { $unset: {
+        leadGeneration: 1,
+      } });
+    }
+  },
+});
+
+export const toggleDailyAccess = new ValidatedMethod({
+  name: 'contentWalls.toggleDailyAccess',
+  validate({ wallId, isEnabled }) {
+    check(wallId, String);
+    check(isEnabled, Boolean);
+  },
+
+  run({ wallId, isEnabled }) {
+    const wall = ContentWalls.findOne(wallId);
+    if (!wall) {
+      throw new Meteor.Error('invalid-data', 'Invalid data');
+    }
+
+    const product = Products.findOne(wall.productId);
+    checkOwnerAndSetup({ product, user: Meteor.user() });
+
+    ContentWalls.update(wallId, { $set: {
+      isDailyAccessEnabled: isEnabled,
+    } });
+  },
+});
 
 export const toggleUpselling = new ValidatedMethod({
   name: 'contentWalls.toggleUpselling',
@@ -55,6 +106,67 @@ export const toggleMicropayment = new ValidatedMethod({
       ContentWalls.update(wallId, { $unset: {
         disableMicropayment: 1,
       } });
+    }
+  },
+});
+
+export const toggleMeteredPaywall = new ValidatedMethod({
+  name: 'contentWalls.toggleMeteredPaywall',
+  validate({ wallId, state }) {
+    check(wallId, String);
+    check(state, Boolean);
+  },
+
+  run({ wallId, state }) {
+    const wall = ContentWalls.findOne(wallId);
+    if (!wall) {
+      throw new Meteor.Error('invalid-data', 'Invalid data');
+    }
+
+    const product = Products.findOne(wall.productId);
+    checkOwnerAndSetup({ product, user: Meteor.user() });
+
+    if (state) {
+      ContentWalls.update(wallId, { $set: {
+        disableMeteredPaywall: true,
+      } });
+    } else {
+      ContentWalls.update(wallId, { $set: {
+        disableMeteredPaywall: false,
+      } });
+    }
+  },
+});
+
+export const changePlan = new ValidatedMethod({
+  name: 'contentWalls.changePlan',
+  validate: new SimpleSchema({
+    wallId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+    planId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      optional: true,
+    },
+  }).validator(),
+
+  run({ wallId, planId }) {
+    const wall = ContentWalls.findOne(wallId);
+    if (!wall) {
+      throw new Meteor.Error('invalid-data', 'Invalid data');
+    }
+
+    const product = Products.findOne(wall.productId);
+    checkOwnerAndSetup({ product, user: Meteor.user() });
+
+    const plan = Plans.findOne(planId);
+
+    if (!plan) {
+      ContentWalls.update(wallId, { $unset: { subscriptionPlanIds: 1 } });
+    } else {
+      ContentWalls.update(wallId, { $set: { subscriptionPlanIds: [plan._id] } });
     }
   },
 });

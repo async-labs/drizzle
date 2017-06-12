@@ -47,7 +47,19 @@ export const FilterQuerySchema = new SimpleSchema({
         type: Boolean,
         optional: true,
       },
+      isBoughtDailyAccess: {
+        type: Boolean,
+        optional: true,
+      },
       isUsedFreeTrial: {
+        type: Boolean,
+        optional: true,
+      },
+      isReferrer: {
+        type: Boolean,
+        optional: true,
+      },
+      isReferred: {
         type: Boolean,
         optional: true,
       },

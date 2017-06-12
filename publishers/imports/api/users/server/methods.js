@@ -1,4 +1,5 @@
 import mailgun from 'mailgun-js';
+import moment from 'moment';
 
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
@@ -8,7 +9,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { check, Match } from 'meteor/check';
 import { _ } from 'meteor/underscore';
 import { checkOwnerAndSetup } from 'meteor/drizzle:check-functions';
-import { Products, Subscriptions, ProductUsers } from 'meteor/drizzle:models';
+import { Products, Subscriptions, Plans, ProductUsers } from 'meteor/drizzle:models';
 import { unsubscribed } from 'meteor/drizzle:user-functions';
 import { buildFilterQuery } from '/imports/api/users/lib/query-builder';
 import { getFilterName } from '/imports/api/users/lib/get-filter-name';
@@ -176,6 +177,74 @@ export const sendEmailToUsers = new ValidatedMethod({
   },
 });
 
+export const exportUsersToCSV = new ValidatedMethod({
+  name: 'productUsers.exportToCSV',
+  validate: FilterQuerySchema.validator(),
+  run(params) {
+    const product = Products.findOne(params.productId, {
+      fields: {
+        mailgunConfig: 1,
+        vendorUserId: 1,
+        isScriptInstalled: 1,
+        wpPlugin: 1,
+      },
+    });
+
+    checkOwnerAndSetup({ product, user: Meteor.user() });
+
+    const query = buildFilterQuery(params);
+    const productUsers = ProductUsers.find(query);
+
+    function getFreeTrial(productUser) {
+      if (!productUser.freeTrialEndAt) {
+        return 'No';
+      }
+
+      const now = new Date();
+
+      if (moment(productUser.freeTrialEndAt).isBefore(now)) {
+        return 'No (ended)';
+      }
+
+      return `Yes (${moment(productUser.freeTrialEndAt).diff(now, 'days')})`;
+    }
+
+    function getReferral(productUser) {
+      let referral = '';
+      if (productUser.isReferrer) {
+        referral += 'referrer';
+      } else if (productUser.isReferred) {
+        referral += 'referred';
+      } else {
+        referral += 'na';
+      }
+
+      return referral;
+    }
+
+    let csv = 'First Name,Last Name,Email,Registered,Single Payment,Daily Pass,Trial,Subscribed,Unsubscribed,Referral,Metered access,Total\n';
+
+    productUsers.forEach((productUser) => {
+      csv += `${productUser.firstName || productUser.name},${productUser.lastName},${productUser.email},`;
+      csv += `${productUser.isRegisteredAtIt ? 'Yes' : 'No'},`;
+      csv += `${productUser.isMicropaid ? 'Yes' : 'No'},`;
+      csv += `${productUser.isBoughtDailyAccess ? 'Yes' : 'No'},`;
+      csv += `${getFreeTrial(productUser)},`;
+
+      csv += `${productUser.isSubscribed ? 'Yes' : 'No'},`;
+      csv += `${productUser.isUnsubscribed ? 'Yes' : 'No'},`;
+
+      csv += `${getReferral(productUser)},`;
+      csv += `${productUser.totalUnlockedCount || 0},`;
+      csv += `$${((productUser.totalSpent || 0) / 100).toFixed(2)}`;
+
+      csv += '\n';
+    });
+
+    return csv;
+  },
+});
+
 export const giveFreeAccess = new ValidatedMethod({
   name: 'productUsers.giveFreeAccess',
   validate({ productUserId, hasFreeAccess }) {
@@ -295,14 +364,30 @@ Meteor.methods({
       unsubscribed({ userId: user._id, productId: product._id });
     }
 
+    if (user.weeklySubscribedProducts && user.weeklySubscribedProducts.indexOf(product._id) !== 1) {
+      modifier.$pull.weeklySubscribedProducts = product._id;
+      unsubscribed({ userId: user._id, productId: product._id, weekly: true });
+    }
+
     if (!_.isEmpty(modifier.$pull)) {
       Meteor.users.update(user._id, modifier);
     } else {
       Meteor.users.update(user._id, { $unset: { imported: 1 } });
     }
 
+    if (user.subscribedPlans && user.subscribedPlans.length > 0) {
+      Plans.find({ productId: product._id }).forEach((plan) => {
+        if (user.subscribedPlans.indexOf(plan._id) === -1) {
+          return;
+        }
+
+        Meteor.users.update(user._id, { $pull: { subscribedPlans: plan._id } });
+        unsubscribed({ userId: user._id, planId: plan._id });
+      });
+    }
+
     ProductUsers.update(productUserId,
-      { $set: { isSubscribed: false } }
+      { $set: { isWeeklySubscribed: false, isSubscribed: false, subscribedPlanIds: [] } }
     );
 
     const now = new Date();

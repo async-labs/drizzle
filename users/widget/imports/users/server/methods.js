@@ -3,8 +3,9 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check } from 'meteor/check';
 import { Accounts } from 'meteor/accounts-base';
-import { ContentWalls } from 'meteor/drizzle:models';
+import { Products, ContentWalls } from 'meteor/drizzle:models';
 import { create } from 'meteor/drizzle:user-functions';
+import { create as createReferral } from 'meteor/drizzle:referral-functions';
 
 export const registerUserToProduct = new ValidatedMethod({
   name: 'users.registered',
@@ -12,8 +13,9 @@ export const registerUserToProduct = new ValidatedMethod({
     url: { type: String },
     productId: { type: String },
     wallId: { type: String, optional: true },
+    promoCode: { type: String, optional: true },
   }).validator(),
-  run({ url, productId, wallId }) {
+  run({ url, productId, wallId, promoCode }) {
     this.unblock();
 
     const userData = {};
@@ -37,11 +39,17 @@ export const registerUserToProduct = new ValidatedMethod({
       },
     });
 
+    if (promoCode) {
+      userData.usedPromoCode = promoCode;
+    }
+
     if (wallId) {
       ContentWalls.update(wallId, { $inc: { registeredUserCount: 1 } });
     }
 
     create({ userId: this.userId, productId }, userData);
+
+    createReferral({ productId, promoCode, givingUserId: this.userId });
   },
 });
 

@@ -1,8 +1,11 @@
+import 'whatwg-fetch';
+
 import { composeWithTracker } from 'react-komposer';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Meteor } from 'meteor/meteor';
 
-import { error } from '/imports/ui/notifier';
+// import { Meteor } from 'meteor/meteor';
+// import { FlowRouter } from 'meteor/kadira:flow-router';
+
 import { currentProduct } from '../../products/currentProduct';
 
 import Setup from '../components/Setup.jsx';
@@ -13,21 +16,25 @@ function composer(props, onData) {
   const product = currentProduct();
   if (!product) { return; }
 
+  /* Meteor.call('products.getWalkthroughStep', product._id, (err, step) => {
+    if (step && step.path && step.path === FlowRouter.current().path) {
+      onData(null, { product, isGuiding: true, checkStatus });
+    }
+  });*/
+
+  const scriptUrl = 'https://s3-us-west-1.amazonaws.com/zenmarket/for-widget.js';
   const drizzleScript = drizzleScriptVar.get();
 
   if (drizzleScript === undefined) {
     drizzleScriptVar.set(null);
-    Meteor.call('products.getWidgetJS', { productId: product._id }, (err, script) => {
-      if (err) {
-        console.log(err);
-        error(err);
-      } else {
-        drizzleScriptVar.set(script);
-      }
-    });
+    fetch(scriptUrl)
+      .then(response => response.text())
+      .then((body) => {
+        drizzleScriptVar.set(body);
+      });
   }
 
-  if (drizzleScript === undefined || drizzleScript === null) {
+  if (!drizzleScript) {
     return;
   }
 

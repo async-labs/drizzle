@@ -163,7 +163,8 @@ class ProductUsersTable extends Component {
   }
 
   renderSubsribeToggle(productUser) {
-    if (!productUser.isSubscribed) {
+    if (!productUser.isSubscribed && !productUser.isWeeklySubscribed &&
+        (!productUser.subscribedPlanIds || productUser.subscribedPlanIds.length === 0)) {
       return (
         <input
           type="checkbox"
@@ -182,16 +183,42 @@ class ProductUsersTable extends Component {
     );
   }
 
+  renderReferralAndFreeUnlock(productUser) {
+    let referral = '';
+    if (productUser.isReferrer) {
+      referral += 'referrer';
+    } else if (productUser.isReferred) {
+      referral += 'referred';
+    } else {
+      referral += 'na';
+    }
+
+    return `${referral}, ${productUser.totalUnlockedCount || 0}`;
+  }
+
   renderIsSubscribed(productUser) {
     let subscribed;
 
     if (productUser.isSubscribed) {
       subscribed = 'Monthly';
+    } else if (productUser.isWeeklySubscribed) {
+      subscribed = 'Weekly';
+    } else if (productUser.isAnnualSubscribed) {
+      subscribed = 'Annual';
+    } else {
+      const plan = !subscribed && productUser.plan();
+      if (plan) {
+        subscribed = plan.name;
+      }
     }
 
     if (subscribed) {
       if (productUser.subscribedDate && !productUser.hasFreeAccess) {
         subscribed = `${subscribed} (${moment(productUser.subscribedDate).format('MMM DD YYYY')})`;
+      }
+
+      if (productUser.usedDiscountCode && !productUser.hasFreeAccess) {
+        subscribed += ' (with discount)';
       }
 
       return subscribed;
@@ -264,6 +291,12 @@ class ProductUsersTable extends Component {
     let unsubscribed;
     if (productUser.isUnsubscribed) {
       unsubscribed = 'Yes';
+    } else if (productUser.isWeeklyUnsubscribed) {
+      unsubscribed = 'Yes';
+    } else if (productUser.isAnnualUnsubscribed) {
+      unsubscribed = 'Yes';
+    } else if (productUser.unsubscribedPlanIds && productUser.unsubscribedPlanIds.length > 0) {
+      unsubscribed = 'Yes';
     }
 
     if (unsubscribed) {
@@ -288,9 +321,14 @@ class ProductUsersTable extends Component {
             'Email',
             <div>Registered <Tooltip text="User registered on this website and link to registration page" /> </div>,
             <div>Paid <Tooltip text="User made single payment" /></div>,
+            <div>Daily Pass <Tooltip text="User bought daily pass" /></div>,
             <div>Trial <Tooltip text="User opted-in free trial" /></div>,
             <div>Subscribed <Tooltip text="User purchased subscription" /></div>,
             <div>Unsubscribed <Tooltip text="User unsubscribed from paid subscription" /></div>,
+            <div>
+              <span>Referral, <Tooltip text="Referral Status: referred someone or got referred" /></span><br />
+              <span>Metered access <Tooltip text="Number of times user access content for free via Metered paywall" /></span><br />
+            </div>,
             <div>Total $ <Tooltip text="Total number of $ spent by user on this website" /></div>,
             <div>Imported <Tooltip text="User was imported by Admin. Uncheck checkbox to unsubscribe imported user." /></div>,
           ]}
@@ -299,9 +337,11 @@ class ProductUsersTable extends Component {
             email: this.renderEmail(productUser),
             registered: this.renderRegisteredAt(productUser),
             singlePayment: productUser.isMicropaid ? 'Yes' : 'No',
+            dailyAccess: productUser.isBoughtDailyAccess ? 'Yes' : 'No',
             freeTrial: this.renderFreeTrial(productUser),
             subscribed: this.renderIsSubscribed(productUser),
             unsubscribed: this.renderIsUnsubscribed(productUser),
+            referralAndFreUnlocks: this.renderReferralAndFreeUnlock(productUser),
             total: `$${(productUser.totalSpent / 100).toFixed(2)}`,
             imported: productUser.imported ? this.renderSubsribeToggle(productUser) : 'No',
           }))}

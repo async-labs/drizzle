@@ -23,3 +23,9 @@ export function readLater(wallId, callback) {
     if (callback) { callback(err, result); }
   });
 }
+
+export function generateLead(wallId, callback) {
+  Meteor.call('products.generateLead', { wallId }, (err, result) => {
+    if (callback) { callback(err, result); }
+  });
+}

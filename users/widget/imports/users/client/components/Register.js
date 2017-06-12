@@ -6,6 +6,8 @@ const Register = ({
   onFacebookClick,
   onSubmit,
   benefits,
+  showPromoCodeLink,
+  promoCode,
 }) => (
   <div>
     {benefits && (
@@ -21,6 +23,8 @@ const Register = ({
       isSubmiting={isSubmiting}
       onSubmit={onSubmit}
       onFacebookClick={onFacebookClick}
+      showPromoCodeLink={showPromoCodeLink}
+      promoCode={promoCode}
     />
   </div>
 );
@@ -29,7 +33,9 @@ Register.propTypes = {
   isSubmiting: PropTypes.bool,
   onSubmit: PropTypes.func.isRequired,
   onFacebookClick: PropTypes.func.isRequired,
+  showPromoCodeLink: PropTypes.bool.isRequired,
   benefits: PropTypes.array,
+  promoCode: PropTypes.string,
 };
 
 export default Register;

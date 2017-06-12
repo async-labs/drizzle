@@ -7,6 +7,8 @@ const sassify = require('sassify');
 const html2js = require('html2js-browserify');
 const uglify = require('gulp-uglify');
 const gulpif = require('gulp-if');
+const gzip = require('gulp-gzip');
+const s3 = require('gulp-s3');
 
 const gulp = require('gulp');
 
@@ -54,6 +56,13 @@ function addSettings(file) {
   });
 }
 
+const s3options = {
+  headers: { 'Cache-Control': 'max-age=3600, public' },
+  gzippedOnly: true,
+};
+
+const aws = JSON.parse(require('fs').readFileSync('./aws.json'));
+
 gulp.task('build', () => {
   const b = browserify({
     entries: './src/widget.js',
@@ -73,10 +82,12 @@ gulp.task('build', () => {
       console.log(err);
       // console.log(err.message); // eslint-disable-line no-console
     })
-    .pipe(source('widget.js'))
+    .pipe(source(options.production ? 'for-widget.js' : 'widget.js'))
     .pipe(buffer())
     .pipe(gulpif(options.production, uglify())) // only uglify in production
-    .pipe(gulp.dest('../../publishers/private/'));
+    .pipe(gulpif(options.production, gzip())) // only minify in production
+    .pipe(gulp.dest('./static/'))
+    .pipe(gulpif(options.production, s3(aws, s3options)));
 });
 
 gulp.task('watch', () => {

@@ -5,7 +5,7 @@ import { Email } from 'meteor/email';
 import { _ } from 'meteor/underscore';
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
-import { Products } from 'meteor/drizzle:models';
+import { Products, Plans } from 'meteor/drizzle:models';
 
 function emailPriceChange() {
   const beginAt = moment().startOf('month');
@@ -15,6 +15,8 @@ function emailPriceChange() {
   Meteor.users.find({
     $or: [
       { subscribedProducts: { $exists: true } },
+      { weeklySubscribedProducts: { $exists: true } },
+      { subscribedPlans: { $exists: true } },
     ] }
   ).forEach((user) => {
     const email = _.findWhere(user.emails, { verified: true });
@@ -43,6 +45,48 @@ function emailPriceChange() {
 
         text += `\n${product.title} (${product.url})'s monthly subscription fee `;
         text += `changed from ${oldAmount / 100} to ${amount / 100}`;
+      });
+    }
+
+    if (user.weeklySubscribedProducts) {
+      Products.find({ _id: { $in: user.weeklySubscribedProducts } }).forEach((product) => {
+        if (!product.weeklySubscription) { return; }
+
+        const oldAmount = product.weeklySubscription.oldAmount;
+        const amount = product.weeklySubscription.amount;
+
+        if (!oldAmount || !product.weeklySubscription.changedAt ||
+            !amount || !product.vendorUserId) {
+          return;
+        }
+
+        if (product.weeklySubscription.changedAt.getTime() < beginAt._d.getTime()) {
+          return;
+        }
+
+        text += `\n${product.title} (${product.url})'s weekly subscription fee `;
+        text += `changed from ${oldAmount / 100} to ${amount / 100}`;
+      });
+    }
+
+    if (user.subscribedPlans) {
+      Plans.find({ _id: { $in: user.subscribedPlans } }).forEach((plan) => {
+        const oldPrice = plan.oldPrice;
+        const price = plan.price;
+
+        if (!oldPrice || !plan.priceChangedAt || !price) {
+          return;
+        }
+
+        if (plan.priceChangedAt.getTime() < beginAt._d.getTime()) {
+          return;
+        }
+
+        const product = Products.findOne(plan.productId);
+        if (!product) { return; }
+
+        text += `\n ${product.title} (${product.url}) - ${plan.name}'s subscription fee `;
+        text += `changed from ${oldPrice / 100} to ${price / 100}`;
       });
     }
 

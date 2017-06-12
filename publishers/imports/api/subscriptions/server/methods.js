@@ -9,6 +9,7 @@ import { unsubscribed } from 'meteor/drizzle:user-functions';
 import {
   ProductUsers,
   Products,
+  Plans,
   Subscriptions,
   ContentWalls,
   PaymentCharges,
@@ -55,7 +56,13 @@ Meteor.methods({
       ],
     };
 
-    if (!planId) {
+    if (planId === 'weekly') {
+      filter.weekly = true;
+    } else if (planId === 'annual') {
+      filter.annual = true;
+    } else if (planId) {
+      filter.planId = planId;
+    } else {
       filter.monthly = true;
     }
 
@@ -86,6 +93,7 @@ Meteor.methods({
     const unsubscriberCounts = {};
 
     const paywallFilter = {
+      subscriptionPlanIds: { $exists: false },
       productId,
     };
 
@@ -95,6 +103,30 @@ Meteor.methods({
       isUnsubscribed: true,
       productId: product._id,
     }).count();
+
+    paywallCounts.weekly = ContentWalls.find(paywallFilter).count();
+    subscriberCounts.weekly = Meteor.users.find({ weeklySubscribedProducts: productId }).count();
+    unsubscriberCounts.weekly = ProductUsers.find({
+      isWeeklyUnsubscribed: true,
+      productId: product._id,
+    }).count();
+
+    paywallCounts.annual = ContentWalls.find(paywallFilter).count();
+    subscriberCounts.annual = Meteor.users.find({ annualSubscribedProducts: productId }).count();
+    unsubscriberCounts.annual = ProductUsers.find({
+      isAnnualUnsubscribed: true,
+      productId: product._id,
+    }).count();
+
+    Plans.find({ productId }).forEach(p => {
+      paywallFilter.subscriptionPlanIds = p._id;
+      paywallCounts[p._id] = ContentWalls.find(paywallFilter).count();
+      subscriberCounts[p._id] = Meteor.users.find({ subscribedPlans: p._id }).count();
+      unsubscriberCounts[p._id] = ProductUsers.find({
+        unsubscribedPlanIds: p._id,
+        productId: product._id,
+      }).count();
+    });
 
     return { paywallCounts, subscriberCounts, unsubscriberCounts };
   },
@@ -127,12 +159,18 @@ Meteor.methods({
     unsubscribed({
       userId: sub.userId,
       productId: product._id,
+      planId: sub.planId,
+      annual: sub.annual,
       monthly: sub.monthly,
+      weekly: sub.weekly,
       freeTrial: sub.isFreeTrial,
     });
 
     Meteor.users.update(sub.userId, { $pull: {
       subscribedProducts: sub.productId,
+      weeklySubscribedProducts: sub.productId,
+      annualSubscribedProducts: sub.productId,
+      subscribedPlanIds: sub.planId,
     } });
 
     const amount = -sub.amount;

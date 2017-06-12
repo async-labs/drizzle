@@ -1,0 +1,15 @@
+{
+  "private": {
+    "stripe": {
+      "testSecretKey": "sk_test_BG60HSgRHpOLqA2hGnesYa4f"
+    }
+  },
+  "public": {
+    "isDevelopment": true,
+    "stripe": {
+      "testPublishableKey": "pk_test_6PxmucBIH5usuoL9FBAEwk19",
+      "production": false
+    },
+    "sharedAuthDomains": ["http://localhost:8050"]
+  }
+}

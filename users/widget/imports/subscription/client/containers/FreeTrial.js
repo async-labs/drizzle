@@ -7,7 +7,7 @@ import {
   Subscriptions,
 } from 'meteor/drizzle:models';
 
-import { subscribeFreetrial, unsubscribeFreetrial } from '../actions';
+import { toggleSubscribe } from '../actions';
 import FreeTrial from '../components/FreeTrial';
 
 
@@ -35,12 +35,10 @@ function composer(props, onData) {
     product.subscription.amount;
 
   const data = {
-    subscribeFreetrial,
-    unsubscribeFreetrial,
-
     product,
     wall,
     freeTrialDayCount,
+    toggleSubscribe,
     trialSubscription,
     isSubscribedFreeTrial,
     isFreeTrialEnabled,

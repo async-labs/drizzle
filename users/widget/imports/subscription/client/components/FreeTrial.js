@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import moment from 'moment';
 import { Button, WidgetSubscriptionPlan } from '/imports/ui/components';
 import SubscribedMessage from './SubscribedMessage';
@@ -14,48 +14,63 @@ const styles = {
   },
 };
 
-class FreeTrial extends Component {
-  constructor(props) {
-    super(props);
+export default React.createClass({
+  propTypes: {
+    monthlyPrice: PropTypes.number,
+    freeTrialDayCount: PropTypes.number,
+    isFreeTrialEnabled: PropTypes.bool,
+    toggleSubscribe: PropTypes.func.isRequired,
+    product: PropTypes.object.isRequired,
+    wall: PropTypes.object,
 
-    this.state = {
+    trialSubscription: PropTypes.object,
+    currentSubscription: PropTypes.object,
+    isSubscribedFreeTrial: PropTypes.bool.isRequired,
+  },
+
+  getInitialState() {
+    return {
       showConfirmationButtons: false,
     };
-  }
+  },
 
   subscribe() {
     const {
-      subscribeFreetrial,
+      toggleSubscribe,
       product,
       wall,
     } = this.props;
 
-    subscribeFreetrial({
+    toggleSubscribe({
       productId: product._id,
+      subscribe: true,
+      freeTrial: true,
       wallId: wall && wall._id,
     });
-  }
+  },
 
   toggleConfirmationButton() {
     this.setState({
       showConfirmationButtons: !this.state.showConfirmationButtons,
     });
-  }
+  },
 
   unsubscribe() {
     const {
-      unsubscribeFreetrial,
+      toggleSubscribe,
       product,
       wall,
     } = this.props;
 
-    unsubscribeFreetrial({
+    toggleSubscribe({
       productId: product._id,
+      subscribe: false,
+      freeTrial: true,
       wallId: wall && wall._id,
     });
 
     this.toggleConfirmationButton();
-  }
+  },
 
   renderSubscribeButton() {
     const {
@@ -73,7 +88,7 @@ class FreeTrial extends Component {
       <div>
         <WidgetSubscriptionPlan
           name={`Get free access for ${freeTrialDayCount} ${days}`}
-          onSubscribeButtonClick={::this.subscribe}
+          onSubscribeButtonClick={this.subscribe}
         />
         <ul className="fs12" style={{ listStyle: 'disc !important' }}>
           <li>
@@ -85,7 +100,7 @@ class FreeTrial extends Component {
         </ul>
       </div>
     );
-  }
+  },
 
 
   renderUnsubscribeButton() {
@@ -99,14 +114,14 @@ class FreeTrial extends Component {
               Are you sure? You can not do free trial again.
             </div>
             <ConfirmationButton
-              onClickConfirm={::this.unsubscribe}
-              onClickCancel={::this.toggleConfirmationButton}
+              onClickConfirm={this.unsubscribe}
+              onClickCancel={this.toggleConfirmationButton}
             />
           </div>
 
         ) : (
           <Button
-            onClick={::this.toggleConfirmationButton}
+            onClick={this.toggleConfirmationButton}
             label="Cancel free trial"
             btnSize={'small'}
             fullWidth
@@ -114,7 +129,7 @@ class FreeTrial extends Component {
         )}
       </div>
     );
-  }
+  },
 
   renderFooter() {
     const {
@@ -143,7 +158,7 @@ class FreeTrial extends Component {
         </ul>
       </div>
     );
-  }
+  },
 
   render() {
     const {
@@ -169,22 +184,5 @@ class FreeTrial extends Component {
         {this.renderFooter()}
       </div>
     );
-  }
-}
-
-FreeTrial.propTypes = {
-  subscribeFreetrial: PropTypes.func.isRequired,
-  unsubscribeFreetrial: PropTypes.func.isRequired,
-
-  monthlyPrice: PropTypes.number,
-  freeTrialDayCount: PropTypes.number,
-  isFreeTrialEnabled: PropTypes.bool,
-  product: PropTypes.object.isRequired,
-  wall: PropTypes.object,
-
-  trialSubscription: PropTypes.object,
-  currentSubscription: PropTypes.object,
-  isSubscribedFreeTrial: PropTypes.bool.isRequired,
-};
-
-export default FreeTrial;
+  },
+});

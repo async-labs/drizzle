@@ -31,13 +31,29 @@ const styles = {
 
 const PaywallLayout = ({
   wall,
+  isMeteredPaywall,
   isClientSide,
+  remainingFreeCount,
   children,
   style,
   topLeftMessage,
 }) => (
   <div style={style}>
     <hr style={styles.paywallHeader.hr} />
+
+    {isMeteredPaywall ? (
+      <span
+        title="Number of free unlocks"
+        style={{
+          ...styles.paywallHeader.iconContainer,
+          marginLeft: '10px',
+        }}
+      >
+        <i className="fa fa-file-text-o" aria-hidden="true">
+
+        </i>&nbsp;{remainingFreeCount || 0}
+      </span>
+    ) : null}
 
     {wall.upvoteCount >= 10 ?
       <span
@@ -76,13 +92,19 @@ const PaywallLayout = ({
 PaywallLayout.propTypes = {
   wall: PropTypes.shape({
     upvoteCount: PropTypes.number,
+    isVideo: PropTypes.bool,
     content: PropTypes.shape({
       original: PropTypes.string,
       thumbnail: PropTypes.string,
     }),
   }).isRequired,
 
+  /*
+   This depends on 'product.freeArticleCount' to exists and 'wall.disabledMeteredPaywall'.
+   */
+  isMeteredPaywall: PropTypes.bool,
   isClientSide: PropTypes.bool,
+  remainingFreeCount: PropTypes.number,
   children: PropTypes.node,
   style: PropTypes.object,
   topLeftMessage: PropTypes.string,
@@ -91,10 +113,15 @@ PaywallLayout.propTypes = {
 PaywallLayout.defaultProps = {
   wall: {
     upvoteCount: 0,
+    isVideo: false,
     content: {
       thumbnail: 'https://s3-us-west-1.amazonaws.com/zenmarket/video-placeholder.png',
     },
   },
+
+  isMeteredPaywall: false,
+  remainingFreeCount: 0,
+  videoThumbnail: 'https://s3-us-west-1.amazonaws.com/zenmarket/video-placeholder.png',
 };
 
 export default PaywallLayout;

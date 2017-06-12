@@ -3,10 +3,15 @@ import { Meteor } from 'meteor/meteor';
 import { chargeUser } from 'meteor/drizzle:charge-functions';
 
 import {
+  leadGeneration,
+  removeProductUser,
   addTotalSpent,
+  getFreeReadArticleCount,
+  increaseFreeReadArticleCount,
 } from 'meteor/drizzle:user-functions';
 
 import {
+  ProductUsers,
   Products,
   ContentWalls,
   ContentWallCharges,
@@ -166,6 +171,107 @@ export function chargePAYG({ user, vendor, product, wall }) {
         { userId: user._id, productId: product._id },
         { amount: -amount }
       );
+    }, 30 * 1000);
+  }
+}
+
+export function unlock({ user, vendor, product, wall }) {
+  if (!wall || wall.disableMeteredPaywall) {
+    throw new Meteor.Error('invalid-data', 'Unlock is not enabled.');
+  }
+
+  if (!user.isEmailVerified()) {
+    throw new Meteor.Error('invalid-data', 'Email is not verified');
+  }
+
+  if (user._id === vendor._id) {
+    throw new Meteor.Error('invalid-data', 'You are this product\'s owner.');
+  }
+
+  if (userAlreadyPaidPAYG(user._id, wall._id)) {
+    throw new Meteor.Error('invalid-data', 'You have already paid.');
+  }
+
+  const freeArticleCount = product.freeArticleCount;
+
+  if (!freeArticleCount) {
+    throw new Meteor.Error('invalid-data', 'Metered paywall is not enabled.');
+  }
+
+  const userReadCount = getFreeReadArticleCount({ userId: user._id, productId: product._id });
+
+  if (userReadCount >= freeArticleCount) {
+    throw new Meteor.Error('invalid-data', 'You used all free unlocks this month.');
+  }
+
+  const chargeId = createCharge({
+    userId: user._id,
+    productId: product._id,
+    vendorId: vendor._id,
+    wallId: wall._id,
+    createdAt: new Date(),
+    url: wall.url,
+    amount: 0,
+    title: wall.title,
+    free: true,
+  });
+
+  increaseFreeReadArticleCount({ userId: user._id, productId: product._id });
+
+  if (wall.demo) {
+    Meteor.setTimeout(function setTimeout() { // eslint-disable-line
+      ContentWallCharges.remove(chargeId);
+
+      const productUser = ProductUsers.findOne({ userId: user._id, productId: product._id });
+      if (productUser) {
+        ProductUsers.update(
+          productUser._id,
+          { $inc: { freeReadArticleCount: -1 } }
+        );
+      }
+    }, 30 * 1000);
+  }
+}
+
+export function generateLead({ user, vendor, product, wall }) {
+  if (!wall) {
+    throw new Meteor.Error('invalid-data', 'PAYG is not enabled.');
+  }
+
+  if (!wall.leadGeneration) {
+    throw new Meteor.Error('invalid-data', 'Lead generation is not enabled!');
+  }
+
+  if (!user.isEmailVerified()) {
+    throw new Meteor.Error('invalid-data', 'Email is not verified');
+  }
+
+  if (user._id === vendor._id) {
+    throw new Meteor.Error('invalid-data', 'You are this product\'s owner.');
+  }
+
+  if (userAlreadyPaidPAYG(user._id, wall._id)) {
+    throw new Meteor.Error('already-unlocked', 'You have already unlocked this content.');
+  }
+
+  const chargeId = createCharge({
+    userId: user._id,
+    productId: product._id,
+    vendorId: vendor._id,
+    wallId: wall._id,
+    createdAt: new Date(),
+    url: wall.url,
+    amount: 0,
+    title: wall.title,
+    leadGeneration: true,
+  });
+
+  leadGeneration({ userId: user._id, productId: product._id });
+
+  if (wall.demo) {
+    Meteor.setTimeout(function setTimeout() { // eslint-disable-line
+      ContentWallCharges.remove(chargeId);
+      removeProductUser({ userId: user._id, productId: product._id });
     }, 30 * 1000);
   }
 }

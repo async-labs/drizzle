@@ -17,6 +17,13 @@ storiesOf('RegisterForm', module)
       onFacebookClick={action('onFacebookClick')}
     />
   ))
+  .add('with showPromoCodeLink enabled', () => (
+    <RegisterForm
+      onSubmit={action('onSubmit')}
+      onFacebookClick={action('onFacebookClick')}
+      showPromoCodeLink
+    />
+  ))
   .add('with isSigningIn enabled', () => (
     <RegisterForm
       onSubmit={action('onSubmit')}

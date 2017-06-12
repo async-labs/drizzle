@@ -93,11 +93,7 @@ function vendorUser(params) {
 }
 
 Accounts.onCreateUser((options, user) => {
-  if (options.isAdmin) {
-    return user;
-  }
-
-  const vendorFields = _.pick(options.profile || {}, 'vendorStatus', 'url');
+  const vendorFields = _.pick(options.profile, 'vendorStatus', 'url');
 
   if (vendorFields.vendorStatus) {
     return vendorUser({ user, url: vendorFields.url });

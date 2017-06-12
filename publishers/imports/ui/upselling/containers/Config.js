@@ -8,6 +8,7 @@ import {
   saveItemCountToShow,
   savePurchasedCount,
   saveUpvoteCount,
+  saveUserCount,
 } from '../actions';
 
 
@@ -29,6 +30,10 @@ function composer(props, onData) {
       count: parseInt(number, 10),
     }),
     onChangeUpvoteCount: (number) => saveUpvoteCount({
+      productId: product._id,
+      count: parseInt(number, 10),
+    }),
+    onChangeUserCount: (number) => saveUserCount({
       productId: product._id,
       count: parseInt(number, 10),
     }),

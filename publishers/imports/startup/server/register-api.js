@@ -1,6 +1,5 @@
-import '/imports/api/wpPlugin/server';
-
-import '/imports/api/stripe/server';
+import '/imports/api/wpPlugin/server/index.js';
+import '/imports/api/stripe/server/index.js';
 
 import '/imports/api/contentWalls/methods';
 import '/imports/api/contentWalls/server/methods';
@@ -8,6 +7,9 @@ import '/imports/api/contentWalls/server/publications';
 import '/imports/api/contentWalls/server/directives';
 import '/imports/api/contentWalls/server/calculateCronjob';
 import '/imports/api/contentWalls/server/checkEmbedCodeCronjob';
+
+import '/imports/api/dailyAccess/server/publications';
+import '/imports/api/dailyAccess/server/methods';
 
 import '/imports/api/notifications/methods';
 
@@ -30,4 +32,7 @@ import '/imports/api/products/server/methods';
 import '/imports/api/products/server/publications';
 import '/imports/api/products/server/checkSetupCronJob';
 
+import '/imports/api/vimeo/server/methods';
+
+import '/imports/api/recommendation/server/createRelatedUrls';
 import '/imports/api/recommendation/server/topUrlCronJob';

@@ -16,6 +16,7 @@ const urls = [
       { path: '/payout', name: 'Payouts' },
       { path: '/single-payments', name: 'Single payments' },
       { path: '/subscriptions', name: 'Subscriptions' },
+      { path: '/daily-access', name: 'Daily Pass' },
       { path: '/payout/monthly-graph', name: 'Payout by month' },
     ],
   },

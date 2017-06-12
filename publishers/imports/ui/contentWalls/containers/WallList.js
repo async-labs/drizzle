@@ -17,6 +17,7 @@ const DUMMY_WALL = {
   _id: '5bLpzi9WNfNrMf9hK',
   autoDecryption: false,
   createdAt: new Date('Thu Nov 10 2016 19:28:23 GMT+0800 (ULAT)'),
+  disableMeteredPaywall: true,
   disabled: false,
   isActive: true,
   isEncryptedContentIntalled: true,

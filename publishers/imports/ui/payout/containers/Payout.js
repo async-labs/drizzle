@@ -26,6 +26,7 @@ function composer(props, onData) {
   if (!product) { return null; }
 
   const subscriptionIncome = product.subscriptionIncome || 0;
+  const dailyAccessIncome = product.dailyAccessIncome || 0;
   const wallIncome = product.paygIncome || 0;
   const totalIncome = product.totalIncome || 0;
 
@@ -37,6 +38,7 @@ function composer(props, onData) {
     monthPeriod,
     changeMonth,
     subscriptionIncome,
+    dailyAccessIncome,
     wallIncome,
     totalIncome,
     isVerified,

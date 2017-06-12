@@ -145,6 +145,7 @@ MainLayout.propTypes = {
   isLoggingIn: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   products: PropTypes.array.isRequired,
+  walkthrough: PropTypes.number,
   userMail: React.PropTypes.string,
   currentUser: React.PropTypes.object,
   currentProduct: React.PropTypes.object,

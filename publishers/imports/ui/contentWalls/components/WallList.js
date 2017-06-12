@@ -66,6 +66,16 @@ export default class WallList extends Component {
     changeSorting(event.currentTarget.dataset.sortkey);
   }
 
+  renderDailyAccessCount(wall) {
+    const { product } = this.props;
+
+    if (!product.isDailyAccessEnabled()) {
+      return <td>NA</td>;
+    }
+
+    return <td>{wall.dailyAccessSoldCount || 0}</td>;
+  }
+
   renderCategories() {
     const { categories, categoryId } = this.props;
 
@@ -115,6 +125,7 @@ export default class WallList extends Component {
         <td>{wall.footerButtonClickedCount || 0}</td>
         <td>{wall.registeredUserCount || 0}</td>
         <td>{wall.sellCount || 0}</td>
+        {this.renderDailyAccessCount(wall)}
         <td>{wall.freeTrialSubscribedUserCount || 0}</td>
         <td>{wall.subscribedUserCount || 0}</td>
         <td>{wall.subscriberVisitedCount || 0}</td>
@@ -281,6 +292,12 @@ export default class WallList extends Component {
                     title: 'Paid',
                     tooltip: 'Total number of users who made single payment on this page',
                     sortKey: 'sellCount',
+                  })}
+
+                  {this.renderHeader({
+                    title: 'Daily pass',
+                    tooltip: 'Total number of users who bought daily pass on this page',
+                    sortKey: 'dailyAccessSoldCount',
                   })}
 
                   {this.renderHeader({

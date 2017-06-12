@@ -7,6 +7,7 @@ import { currentProduct } from '../../products/currentProduct';
 import { error, success } from '../../notifier';
 
 import {
+  Plans,
   ContentWalls,
   Categories,
 } from 'meteor/drizzle:models';
@@ -16,10 +17,13 @@ import {
   toggleAutoDecryption,
   saveContent,
   saveImage,
+  saveVimeoVideoUrl,
   saveAutoDecryptionConfig,
   toggleFixedPricing,
   saveFixedPrice,
   toggleVideo,
+  toggleLeadGeneration,
+  changePlan,
   changeCategory,
 } from '../actions';
 
@@ -28,6 +32,7 @@ import ManageContentWall from '../components/ManageContentWall.jsx';
 function subscribe({ wallId, productId }) {
   const subs = [
     Meteor.subscribe('contentWalls/getById', wallId).ready(),
+    Meteor.subscribe('subscriptions.plansByProductId', { productId }).ready(),
     Meteor.subscribe('contentWalls.categories', productId).ready(),
   ];
 
@@ -58,10 +63,15 @@ function composer(props, onData) {
     toggleFixedPricing,
     saveContent,
     saveImage,
+    saveVimeoVideoUrl,
     saveAutoDecryptionConfig,
     saveFixedPrice,
     toggleVideo,
+    toggleLeadGeneration,
+    changePlan,
     changeCategory,
+    isVimeoConnected: !!product.vimeoToken && product.vimeoToken.isConnected,
+    plans: Plans.find({ productId: product._id }, { sort: { name: 1 } }).fetch(),
     categories: Categories.find({ productId: product._id }, { sort: { name: 1 } }).fetch(),
     updateEmbedlyData() {
       Meteor.call('contentWalls.updateEmbedlyData', wall._id, (err) => {

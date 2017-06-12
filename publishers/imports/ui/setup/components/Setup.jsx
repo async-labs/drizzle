@@ -15,9 +15,28 @@ export default class Setup extends Component {
 
     this.state = {
       usingWordpress: usingWordpress === undefined ? true : usingWordpress,
+      buttonStyle: { border: '0px #888 solid' },
     };
 
     this.toggleSetup = this.toggleSetup.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { isGuiding } = this.props;
+
+    if (isGuiding && !prevProps.isGuiding && !this.intervalId) {
+      this.intervalId = setInterval((comp) => {
+        const { buttonStyle } = comp.state;
+        const border = buttonStyle.border === '1px #888 solid' ? '0px #888 solid' : '1px #888 solid';
+        comp.setState({ buttonStyle: { border } });
+      }, 2500, this);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   toggleSetup(event) {
@@ -28,21 +47,7 @@ export default class Setup extends Component {
 
   renderSetup() {
     const { product, drizzleScript } = this.props;
-
-    if (!drizzleScript) {
-      return (
-        <div>
-          <h2 className="text-center pad20">
-            Setup for <b>non-Wordpress</b> website
-          </h2>
-          <div className="margin-t-20">
-            <h4>
-              Setup is not complete. Generate private/widget.js file.
-            </h4>
-          </div>
-        </div>
-      );
-    }
+    const { buttonStyle } = this.state;
 
     const embedCode = `<script>
         (function() {
@@ -70,6 +75,7 @@ export default class Setup extends Component {
             <CopyButton
               target="#payg-embed-code"
               text="Copy code"
+              style={buttonStyle}
             />
           </div>
         </div>
@@ -78,7 +84,7 @@ export default class Setup extends Component {
   }
 
   render() {
-    const { product } = this.props;
+    const { product, isGuiding } = this.props;
     const { usingWordpress } = this.state;
 
     if (!product) {
@@ -109,7 +115,7 @@ export default class Setup extends Component {
           </table>
         </div>
 
-        {usingWordpress ? <WordpressSetup /> : this.renderSetup()}
+        {usingWordpress ? <WordpressSetup isGuiding={isGuiding} /> : this.renderSetup()}
       </div>
     );
   }
@@ -118,4 +124,5 @@ export default class Setup extends Component {
 Setup.propTypes = {
   product: PropTypes.object.isRequired,
   drizzleScript: PropTypes.string,
+  isGuiding: PropTypes.bool,
 };

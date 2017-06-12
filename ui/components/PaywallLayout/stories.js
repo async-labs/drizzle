@@ -20,6 +20,17 @@ storiesOf('PaywallLayout', module)
       }}
     />
   ))
+  .add('with enabled metered paywall', () => (
+    <PaywallLayout
+      isMeteredPaywall
+    />
+  ))
+  .add('with enabled metered paywall and 5 remainingFreeCount', () => (
+    <PaywallLayout
+      isMeteredPaywall
+      remainingFreeCount={5}
+    />
+  ))
   .add('with video', () => (
     <PaywallLayout
       wall={{

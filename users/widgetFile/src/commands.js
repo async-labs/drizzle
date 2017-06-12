@@ -62,15 +62,22 @@ function initPaywallGuestView() {
 function initPaywall() {
 // Elements
   const payButton = document.querySelector('.zenmarket--pay-button');
+  const dayAccessButton = document.querySelector('.zenmarket--day-access-button');
+  const buyPlanButton = document.querySelector('.zenmarket--buy-plan-button');
   const subscribeButton = document.querySelector('.zenmarket--subscribe-button');
   const updateCardButton = document.querySelector('.zenmarket--update-card-info-button');
   const unlockButton = document.querySelector('.zenmarket--unlock-button');
+  const generateLeadButton = document.querySelector('.zenmarket--generate-lead-button');
   const upvoteButton = document.querySelector('.zenmarket--upvote-button');
+  const readLaterButton = document.querySelector('.zenmarket--read-later');
   const thumbnail = document.querySelector('.zenmarket--thumbnail');
 
 // Event handlers
   const onPayButtonClick = () => sendCommand({ command: 'pay' });
+  const onDayAccessButtonClick = () => sendCommand({ command: 'buyDailyAccess' });
+  const onBuyPlanButtonClick = () => sendCommand({ command: 'buyPlan' });
   const onUnlockButtonClick = () => sendCommand({ command: 'unlock' });
+  const onGenerateLeadButtonClick = () => sendCommand({ command: 'generateLead' });
 
   const onSubscribeButtonClick = () => {
     showWidget();
@@ -80,6 +87,10 @@ function initPaywall() {
   const onUpvoteButtonClick = () => {
     showWidget();
     sendCommand({ command: 'upvote' });
+  };
+
+  const onReadLaterButtonClick = () => {
+    sendCommand({ command: 'readLater' });
   };
 
   const onThumbnailClick = () => {
@@ -99,21 +110,28 @@ function initPaywall() {
 
 // Assign event listeners
   addClickListener(payButton, onPayButtonClick);
+  addClickListener(dayAccessButton, onDayAccessButtonClick);
+  addClickListener(buyPlanButton, onBuyPlanButtonClick);
   addClickListener(subscribeButton, onSubscribeButtonClick);
   addClickListener(updateCardButton, onUpdateCardButtonClick);
   addClickListener(unlockButton, onUnlockButtonClick);
+  addClickListener(generateLeadButton, onGenerateLeadButtonClick);
   addClickListener(upvoteButton, onUpvoteButtonClick);
+  addClickListener(readLaterButton, onReadLaterButtonClick);
   addClickListener(thumbnail, onThumbnailClick);
 }
 
 function initRegisterForm() {
   const loginForm = document.getElementById('drizzle-login-form');
   const registerForm = document.getElementById('drizzle-register-form');
+  const promoCodeLink = document.getElementById('drizzle-promocode-link');
   const recoverPasswordLink = document.getElementById('drizzle-recover-password-link');
   const recoverPasswordForm = document.getElementById('drizzle-recover-password-form');
   const loginLinkFromRegisterForm = document.querySelector('#drizzle-register-form #drizzle-login-link');
   const loginLinkFromRecoverPasswordForm = document.querySelector('#drizzle-recover-password-form #drizzle-login-link');
+  const promoCodeForm = document.getElementById('drizzle-promocode-form');
   const facebookButton = document.querySelector('.drizzle-facebook-button');
+  const registerLinkFromPromocodeForm = document.querySelector('#drizzle-promocode-form #drizzle-register-link');
   const registerLinkFromLoginForm = document.querySelector('#drizzle-login-form #drizzle-register-link');
 
   const submitSignupForm = ({ target } = event) => {
@@ -134,6 +152,17 @@ function initRegisterForm() {
     sendCommand({
       command: 'signUp',
       options: data,
+    });
+  };
+
+  const submitPromocodeForm = ({ target } = event) => {
+    event.preventDefault();
+
+    const { promoCode } = target;
+
+    sendCommand({
+      command: 'addPromoCode',
+      promoCode: promoCode.value,
     });
   };
 
@@ -171,6 +200,14 @@ function initRegisterForm() {
     });
   };
 
+  const togglePromocodeForm = (event) => {
+    event.preventDefault();
+
+    sendCommand({
+      command: 'togglePromocodeForm',
+    });
+  };
+
   const toggleLoginForm = (event) => {
     event.preventDefault();
 
@@ -189,7 +226,9 @@ function initRegisterForm() {
 
 // Add click listeners
   addClickListener(facebookButton, loginWithFacebook);
+  addClickListener(registerLinkFromPromocodeForm, togglePromocodeForm);
   addClickListener(registerLinkFromLoginForm, toggleLoginForm);
+  addClickListener(promoCodeLink, togglePromocodeForm);
   addClickListener(recoverPasswordLink, toggleRecoverPasswordForm);
   addClickListener(loginLinkFromRegisterForm, toggleLoginForm);
   addClickListener(loginLinkFromRecoverPasswordForm, toggleRecoverPasswordForm);
@@ -197,6 +236,7 @@ function initRegisterForm() {
 // Add submit listeners
   addSubmitListener(registerForm, submitSignupForm);
   addSubmitListener(loginForm, submitLoginForm);
+  addSubmitListener(promoCodeForm, submitPromocodeForm);
   addSubmitListener(recoverPasswordForm, submitRecoverPasswordForm);
 }
 

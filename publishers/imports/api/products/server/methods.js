@@ -1,6 +1,5 @@
 import { parse } from 'url';
 import cheerio from 'cheerio';
-
 import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
@@ -9,6 +8,7 @@ import { Random } from 'meteor/random';
 import { HTTP } from 'meteor/http';
 import { check, Match } from 'meteor/check';
 import { _ } from 'meteor/underscore';
+import { getSlug } from 'meteor/ongoworks:speakingurl';
 import { checkSetup, checkOwnerAndSetup } from 'meteor/drizzle:check-functions';
 import {
   Products,
@@ -132,6 +132,7 @@ Meteor.methods({
       vendorUserId: this.userId,
       claimStatus: 'pending',
       website: true,
+      verifyKey: Random.secret(),
       createdAt: new Date(),
       numberVisitors: data.numberVisitors,
     };
@@ -175,6 +176,17 @@ Meteor.methods({
     }
 
     obj.domain = productDomain;
+
+    let slug = getSlug(obj.title);
+    let count = 1;
+    const originalSlug = slug;
+
+    while (Products.find({ slug }).count() > 0) {
+      count += 1;
+      slug = `${originalSlug}-${count}`;
+    }
+
+    obj.slug = slug;
 
     try {
       return Products.insert(obj);
@@ -383,23 +395,5 @@ export const configStripe = new ValidatedMethod({
 
     KeyValues.upsert({ key: 'stripePublishableKey' }, { $set: { value: publishableKey } });
     KeyValues.upsert({ key: 'stripeSecretKey' }, { $set: { value: secretKey } });
-  },
-});
-
-export const getWidgetJS = new ValidatedMethod({
-  name: 'products.getWidgetJS',
-  validate({ productId }) {
-    check(productId, String);
-  },
-
-  run({ productId }) {
-    const product = Products.findOne(productId);
-    checkOwnerAndSetup({ product, user: Meteor.user() });
-
-    try {
-      return Assets.getText('widget.js');
-    } catch (ex) {
-      return '';
-    }
   },
 });

@@ -5,11 +5,13 @@ import { check } from 'meteor/check';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 
 import {
+  Plans,
   Subscriptions,
   Products,
   ProductUsers,
   ContentWalls,
   ContentWallCharges,
+  Referrals,
   KeyValues,
 } from 'meteor/drizzle:models';
 
@@ -58,6 +60,10 @@ Meteor.publish('products/getContentWallByUrl', (url) => {
       'content.thumbnail': 1,
       'content.thumbnails': 1,
       disabled: 1,
+      isVideo: 1,
+      leadGeneration: 1,
+      subscriptionPlanIds: 1,
+      disableMeteredPaywall: 1,
       donationEnabled: 1,
       donationMessage: 1,
       donationThankYouMessage: 1,
@@ -103,6 +109,10 @@ Meteor.publishComposite('widget.product', function widgetProduct(url) {
             defaultWallPrice: 1,
             subscriptionEnabled: 1,
             subscription: 1,
+            weeklySubscription: 1,
+            weeklySubscriptionEnabled: 1,
+            annualSubscription: 1,
+            annualSubscriptionEnabled: 1,
             freeArticleCount: 1,
             freeArticleCountChangedAt: 1,
             sharingDisabled: 1,
@@ -112,6 +122,9 @@ Meteor.publishComposite('widget.product', function widgetProduct(url) {
             isFooterBarEnabledOnAllPages: 1,
             isClientSide: 1,
             freeTrialDayCount: 1,
+            referralConfig: 1,
+            dailyAccessConfig: 1,
+            discountConfig: 1,
             socialProof: 1,
             guestButtonText: 1,
             guestMessageText: 1,
@@ -119,7 +132,13 @@ Meteor.publishComposite('widget.product', function widgetProduct(url) {
         }
       );
     },
-    children: [],
+    children: [
+      {
+        find(product) {
+          return Plans.find({ productId: product._id });
+        },
+      },
+    ],
   };
 
   if (this.userId) {
@@ -142,6 +161,14 @@ Meteor.publishComposite('widget.product', function widgetProduct(url) {
           productId: product._id,
         });
       },
+      children: [{
+        find(productUser) {
+          return Referrals.find({
+            promoCode: productUser.usedPromoCode,
+            givingUserId: this.userId,
+          });
+        },
+      }],
     });
   }
 

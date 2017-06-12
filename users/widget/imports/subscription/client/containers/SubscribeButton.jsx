@@ -18,14 +18,29 @@ function composer(props, onData) {
 
   const isOwner = user._id === product.vendorUserId;
 
+  const planId = wall && wall.subscriptionPlanIds && wall.subscriptionPlanIds[0];
+
   const subscriptionEnabled = !!(
-    product.subscriptionEnabled && product.subscription && product.subscription.amount
+    (product.subscriptionEnabled && product.subscription && product.subscription.amount) ||
+    (product.weeklySubscriptionEnabled && product.weeklySubscription &&
+     product.weeklySubscription.amount) ||
+    planId
   );
 
   let userSubscribed = false;
   if (subscriptionEnabled) {
     userSubscribed = !!(user.subscribedProducts &&
       user.subscribedProducts.indexOf(product._id) !== -1);
+
+    if (!userSubscribed) {
+      userSubscribed = !!(user.weeklySubscribedProducts &&
+        user.weeklySubscribedProducts.indexOf(product._id) !== -1);
+    }
+
+    if (!userSubscribed && planId) {
+      userSubscribed = !!(user.subscribedPlans &&
+        user.subscribedPlans.indexOf(planId) !== -1);
+    }
   }
 
   const { freeTrialDayCount, isFreeTrialEnabled } = product;

@@ -43,6 +43,7 @@ function compose(props, onData) {
       createTab('All', null),
       createTab('Registered', 'isRegisteredAtIt'),
       createTab('Single Payment', 'isMicropaid'),
+      createTab('Daily Pass', 'isBoughtDailyAccess'),
       createTab('Trial', 'isUsedFreeTrial'),
       createTab('Cancelled Trial', 'isCancelledFreeTrial'),
       createTab('Subscribed', 'isSubscribed'),
