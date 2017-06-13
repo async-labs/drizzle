@@ -34,7 +34,7 @@ https://medium.com/@getdrizzle/challenges-for-content-monetization-7a1b813ba19d#
 
 
 # Features
-### Open-source license (this repo)
+### Open-source license (MIT license)
 - Email and Facebook signup and login, Email verification
 - Payments, subscriptions, refunds via Stripe
 - User-friendly paywall. Login with 2 clicks, pay with 2 clicks. Screenshots: https://medium.com/@getdrizzle/how-to-get-more-subscribers-with-a-user-friendly-paywall-part-i-83887372547d#.g0sx8k3km
@@ -66,8 +66,6 @@ https://medium.com/@getdrizzle/challenges-for-content-monetization-7a1b813ba19d#
 - Set up monthly subscriptions
 - Set up a Free Trial offer for subscriptions
 - Ability to create single sign-on system accross multiple websites
-
-### Commercial license
 - Set up on Wordpress or Drupal with our plugin or module (via API key)
 - Paywall videos
 - Metered paywall
@@ -188,14 +186,14 @@ Navigate to http://localhost:8060, you should see:
 To see blue footer bar with call-to-action, go to http://localhost:8021/wall-settings and **Enable call to action footer bar**.
 
 # Deploy
-You will need to deploy 2 apps: Publishers app ( ./publishers) and Widget app (./users/widget). Here is a detailed description for deployment of Meteor apps with mupx tool: https://github.com/tima101/meteor-deploy-letsencrypt
+You will need to deploy 2 apps: Publishers app ( ./publishers) and Widget app (./users/widget). Use this tool to deploy Meteor apps: https://github.com/zodern/meteor-up
 
 # Future and Contributions
 This section will need more work. The next 3 steps for this open-source project:
-- Improve UI and UX on Publishers app (./publishers).
-- Meteor 1.5 to reduce initial bundle size for Widget app (./users/widget).
-- Add Apple pay for easier payments on Mobile.
+- Improve UI and UX on Publishers app (../publishers).
 - Add client-side paywalling in addition to server-side.
+- Add Apple pay for easier payments on Mobile web.
+
 
 # License
 
