@@ -197,4 +197,4 @@ This section will need more work. The next 3 steps for this open-source project:
 
 # License
 
-[GPLv3](https://github.com/Drizzle-paywall/paywall-membership-subscription/blob/master/LICENSE). For the commercial license, contact kelly@getdrizzle.com.
+[MIT](https://github.com/Drizzle-paywall/paywall-membership-subscription/blob/master/LICENSE). For the commercial license, contact kelly@getdrizzle.com.
