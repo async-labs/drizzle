@@ -7,10 +7,6 @@ Our blog about paywalls and monetization: https://medium.com/drizzle-blog
 
 ![paywall](https://user-images.githubusercontent.com/10218864/27101507-e2a671f4-5036-11e7-81bf-840e3d026317.png)
 
-Live example of paywalled content: http://asiatoworld.com/2016/05/11/brave-villager-stares-down-wild-siberian-tiger/
-Demo email: demo@getdrizzle.com
-Demo password: demo
-
 Live example of publisher's dashboard: https://app.getdrizzle.com/signup
 
 If instead of selling content, you're interested in detecting Adblock users and recovering ad revenue, check out our Adblock detector at this repo: https://github.com/tima101/Native-adblock-detector
